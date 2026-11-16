@@ -4,209 +4,678 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aleksandra Bocheva</title>
+  <meta name="description" content="Aleksandra Bocheva — computational social scientist. Machine learning, discrete choice models and the sociology of partner choice." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <span class="nav-name">Aleksandra Bocheva</span>
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+  <canvas id="stars" aria-hidden="true"></canvas>
 
-  <!-- HERO -->
-  <section id="hero">
+  <!-- ═════════ HUD ═════════ -->
+  <header class="hud">
+    <a href="#start" class="hud-logo" aria-label="Back to top">AB</a>
+    <div class="hud-level"><span id="hud-level">LV 0 · TITLE</span></div>
+    <nav class="hud-nav" aria-label="Level select">
+      <a href="#character">Character</a>
+      <a href="#quests">Quests</a>
+      <a href="#thesis" class="boss-link">Boss</a>
+      <a href="#trophies">Trophies</a>
+      <a href="#inventory">Inventory</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="hud-trophy" id="trophy-btn" aria-label="Achievements">
+      <span aria-hidden="true">🏆</span> <span id="ach-count">0</span>/<span id="ach-total">8</span>
+    </button>
+    <div class="xp" aria-hidden="true">
+      <div class="xp-fill" id="xp-fill"></div>
+      <span class="xp-label" id="xp-label">XP 0</span>
+    </div>
+  </header>
+
+  <!-- Achievements panel -->
+  <aside class="ach-panel" id="ach-panel" hidden>
+    <div class="ach-panel-head">
+      <span class="pixel">ACHIEVEMENTS</span>
+      <button id="ach-close" aria-label="Close">✕</button>
+    </div>
+    <ul id="ach-list"></ul>
+  </aside>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <!-- ═════════ TITLE SCREEN ═════════ -->
+  <section id="start" class="hero" data-level="LV 0 · TITLE">
     <div class="hero-inner">
       <div class="hero-text">
-        <p class="hero-label">Hi, I'm</p>
-        <h1>Aleksandra<br>Bocheva</h1>
-        <p class="hero-sub">Computational Social Scientist &amp; Data Researcher</p>
+        <p class="pixel tag blink-slow">PLAYER 1 · READY</p>
+        <h1>Aleksandra<br><span class="grad">Bocheva</span></h1>
+        <p class="hero-class">
+          <span class="pixel small muted">CLASS&nbsp;›</span>
+          <span id="typewriter">Computational Social Scientist</span><span class="caret">▌</span>
+        </p>
         <p class="hero-desc">
-          I work at the intersection of machine learning and social science —
-          using data to understand human behaviour, partnership formation,
-          and complex social systems.
+          I use machine learning and statistical models to understand how people
+          form relationships and move through social structures. Most recently:
+          can an algorithm work out who someone married?
         </p>
         <div class="hero-links">
-          <a href="#projects" class="btn-primary">View Projects</a>
-          <a href="https://linkedin.com/in/aleksandra-bocheva-a667a1252" class="btn-secondary" target="_blank">LinkedIn</a>
+          <a href="#character" class="btn btn-pink" id="press-start">▶ PRESS START</a>
+          <a href="#thesis" class="btn btn-ghost">Skip to boss</a>
         </div>
       </div>
-      <div class="hero-photo">
-        <img src="photo.jpg" alt="Aleksandra Bocheva" />
+
+      <div class="player-card px reveal">
+        <div class="player-card-top">
+          <span class="pixel small">P1</span>
+          <span class="pixel small muted">HOME · NORRKÖPING</span>
+        </div>
+        <div class="player-photo">
+          <img src="photo-sm.jpg" alt="Portrait of Aleksandra Bocheva" width="600" height="900" />
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+        </div>
+        <div class="player-meters">
+          <div class="meter"><span>CURIOSITY</span><div class="meter-bar"><i style="--w:100%;--c:var(--pink)"></i></div><b>∞</b></div>
+          <div class="meter"><span>R-FU</span><div class="meter-bar"><i style="--w:90%;--c:var(--cyan)"></i></div><b>ADV</b></div>
+          <div class="meter"><span>THEORY</span><div class="meter-bar"><i style="--w:85%;--c:var(--violet)"></i></div><b>PPS</b></div>
+        </div>
+      </div>
+    </div>
+    <a href="#character" class="scroll-hint pixel small" aria-label="Scroll down">SCROLL TO PLAY<br>▼</a>
+  </section>
+
+  <!-- ═════════ LEVEL 1 · CHARACTER ═════════ -->
+  <section id="character" class="section" data-level="LV 1 · CHARACTER">
+    <div class="container">
+      <header class="sec-head reveal">
+        <span class="pixel lvl">LEVEL 1</span>
+        <h2>Character sheet</h2>
+      </header>
+
+      <div class="char-grid">
+        <div class="char-bio px reveal">
+          <div class="char-id">
+            <div class="avatar">
+              <img src="avatar.jpg" alt="Headshot of Aleksandra Bocheva" width="360" height="360" loading="lazy" />
+            </div>
+            <div class="char-id-text">
+              <p class="pixel small yellow">ALEKSANDRA BOCHEVA</p>
+              <dl>
+                <div><dt>CLASS</dt><dd>Computational Social Scientist</dd></div>
+                <div><dt>BASE</dt><dd>Norrköping, Sweden</dd></div>
+                <div><dt>SPEAKS</dt><dd>BG · EN · SV</dd></div>
+              </dl>
+            </div>
+          </div>
+          <p>
+            I recently graduated with an <strong>MSc in Computational Social Science from Linköping University</strong>
+            in Sweden. Before that I did a BA in <strong>Philosophy, Politics and Society</strong> at Radboud University
+            in the Netherlands, together with an <strong>Interdisciplinary Honours Degree</strong>.
+          </p>
+          <p>
+            My work pairs rigorous statistical methods with social theory. I use machine learning, conditional logit
+            models and agent-based simulations on real questions about human behaviour and decision-making.
+            Day to day that means a lot of data cleaning, validation, exploratory analysis, feature engineering
+            and visualisation.
+          </p>
+          <p>
+            Outside research I led <strong>LinCSS</strong>, the Association for Computational Social Science at LiU,
+            first as Head of PR &amp; Social Media and then as President. I also care about sustainability and about
+            explaining complex science to people who don't work with data.
+          </p>
+        </div>
+
+        <div class="char-side">
+          <div class="px stat-block reveal">
+            <p class="pixel small block-title">BASE STATS</p>
+            <div class="stat">
+              <span>R &amp; RStudio</span>
+              <div class="stat-bar"><i data-w="90"></i></div>
+              <em>Advanced</em>
+            </div>
+            <div class="stat">
+              <span>English</span>
+              <div class="stat-bar"><i data-w="95"></i></div>
+              <em>C2</em>
+            </div>
+            <div class="stat">
+              <span>Bulgarian</span>
+              <div class="stat-bar"><i data-w="100"></i></div>
+              <em>Native</em>
+            </div>
+            <div class="stat">
+              <span>Swedish</span>
+              <div class="stat-bar"><i data-w="30"></i></div>
+              <em>A2 ↗ C1</em>
+            </div>
+            <p class="stat-note">Currently in a full-time SFI course, levelling Swedish up towards C1.</p>
+          </div>
+          <div class="px traits reveal">
+            <p class="pixel small block-title">TRAITS</p>
+            <div class="chips">
+              <span>🧠 Analytical sociology</span>
+              <span>📊 Discrete choice</span>
+              <span>🌲 Tree ensembles</span>
+              <span>🗣️ Science communication</span>
+              <span>🏛️ Leadership</span>
+              <span>⚖️ AI ethics</span>
+              <span>🌱 Sustainability</span>
+              <span>🌍 International teams</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="about">
+  <!-- ═════════ LEVEL 2 · QUEST LOG ═════════ -->
+  <section id="quests" class="section alt" data-level="LV 2 · QUEST LOG">
     <div class="container">
-      <h2>About</h2>
-      <div class="about-grid">
-        <div class="about-text">
-          <p>
-            I'm a Master's student in Computational Social Science at Linköping University, Sweden,
-            with a background in Philosophy, Politics and Society from Radboud University in the Netherlands.
-          </p>
-          <p>
-            My work blends rigorous statistical methods with social theory — applying tools like
-            Random Forest, conditional logit models, and agent-based simulations to real questions
-            about how people form relationships and navigate social structures.
-          </p>
-          <p>
-            Outside of research, I serve as President of LinCSS (the Association for Computational
-            Social Science at LiU), where I lead governance, strategy, and community-building
-            for our student body.
-          </p>
+      <header class="sec-head reveal">
+        <span class="pixel lvl">LEVEL 2</span>
+        <h2>Quest log</h2>
+        <p class="sec-desc">The route so far. The line fills in as you scroll.</p>
+      </header>
+
+      <div class="timeline" id="timeline">
+        <div class="timeline-track"><div class="timeline-fill" id="timeline-fill"></div></div>
+        <ol>
+        <li class="quest reveal">
+          <div class="quest-node">🏛️</div>
+          <div class="quest-card px">
+            <div class="quest-meta"><span class="pixel small">2021 – 2024</span><span class="badge done">CLEARED</span></div>
+            <h3>BA Philosophy, Politics &amp; Society</h3>
+            <p class="muted">Radboud University · Nijmegen, NL · Aug 2021 – Sep 2024</p>
+            <p>Built an analytical framework for societal challenges, policy design and organisational ethics, with a focus on how technology and systemic change affect human behaviour and institutional trust.</p>
+            <p class="bonus">★ Bonus: <a href="#trophies">Interdisciplinary Honours Degree</a> + <a href="#trophies">Sustainability Certificate</a></p>
+            <span class="xp-reward">+ THEORY</span>
+          </div>
+        </li>
+
+        <li class="quest reveal">
+          <div class="quest-node">📣</div>
+          <div class="quest-card px">
+            <div class="quest-meta"><span class="pixel small">OCT 2022 – SEP 2024</span><span class="badge done">CLEARED</span></div>
+            <h3>Student Recruiter</h3>
+            <p class="muted">Campus Detachering · Radboud University</p>
+            <p>Organised large Open Day recruitment events and was the main representative of the Bachelor's programme, presenting it to international audiences across several cohorts.</p>
+            <span class="xp-reward">+ CHARISMA</span>
+          </div>
+        </li>
+
+        <li class="quest reveal">
+          <div class="quest-node">🎓</div>
+          <div class="quest-card px">
+            <div class="quest-meta"><span class="pixel small">AUG 2024 – SEP 2026</span><span class="badge done">CLEARED</span></div>
+            <h3>MSc Computational Social Science</h3>
+            <p class="muted">Linköping University · Norrköping, SE</p>
+            <p>Engineering and data focus: machine learning, statistical analysis, agent-based modelling and advanced R, applied to human behaviour and decision-making. Built agent-based simulations to test hypotheses across simulated social environments.</p>
+            <span class="xp-reward">+ METHODS</span>
+          </div>
+        </li>
+
+        <li class="quest reveal">
+          <div class="quest-node">🛡️</div>
+          <div class="quest-card px">
+            <div class="quest-meta"><span class="pixel small">OCT 2024 – JUN 2026</span><span class="badge guild">GUILD</span></div>
+            <h3>LinCSS: Head of PR → President</h3>
+            <p class="muted">Association for Computational Social Science · Linköping University</p>
+            <div class="ranks">
+              <div class="rank"><span class="pixel small">RANK 1 · OCT 2024 – OCT 2025</span><p><strong>Head of PR &amp; Social Media.</strong> Ran external communications and social media, and coordinated academic and social events connecting students, alumni and faculty.</p></div>
+              <div class="rank up"><span class="pixel small">RANK UP ▲ · OCT 2025 – JUN 2026</span><p><strong>President.</strong> Led the executive board on governance and strategy, and was the association's statutory financial signatory, responsible for its budget, bank accounts and compliance.</p></div>
+            </div>
+            <span class="xp-reward">+ LEADERSHIP</span>
+          </div>
+        </li>
+
+        <li class="quest reveal">
+          <div class="quest-node">🔬</div>
+          <div class="quest-card px">
+            <div class="quest-meta"><span class="pixel small">AUG 2025 – JAN 2026</span><span class="badge done">CLEARED</span></div>
+            <h3>Research Intern</h3>
+            <p class="muted">Institute for Analytical Sociology (IAS), LiU</p>
+            <p>Worked with a research team applying random forests and logistic regression to social network dynamics and partnership formation. Cleaned large-scale census and survey data and helped design the analysis pipeline that the thesis was built on.</p>
+            <span class="xp-reward">+ PIPELINES</span>
+          </div>
+        </li>
+
+        <li class="quest boss reveal">
+          <div class="quest-node">💘</div>
+          <div class="quest-card px">
+            <div class="quest-meta"><span class="pixel small">SPRING 2026</span><span class="badge bossbadge">BOSS</span></div>
+            <h3>Master's thesis: How Predictable is Love?</h3>
+            <p>Can a model pick a woman's real husband out of every eligible man in her city? The full breakdown is in the next level.</p>
+            <a href="#thesis" class="btn btn-pink btn-sm">ENTER BOSS LEVEL ▶</a>
+          </div>
+        </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ LEVEL 3 · BOSS — THESIS ═════════ -->
+  <section id="thesis" class="section boss-section" data-level="LV 3 · BOSS">
+    <div class="hearts" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="container">
+
+      <header class="boss-head reveal">
+        <p class="pixel warn blink">⚠ BOSS APPROACHING ⚠</p>
+        <span class="pixel lvl">LEVEL 3 · MASTER'S THESIS</span>
+        <h2 class="boss-title">How Predictable is <span class="grad">Love?</span></h2>
+        <p class="boss-sub">Machine Learning meets Partner Choice</p>
+        <div class="boss-meta">
+          <span>Linköping University · 30 ECTS · Spring 2026</span>
+          <span>Supervisor: Benjamin Jarvis · Co-supervisor: Jesper Lindmarker</span>
         </div>
-        <div class="about-highlights">
-          <div class="highlight-card">
-            <span class="highlight-icon">🎓</span>
-            <div>
-              <strong>MSc Computational Social Science</strong>
-              <span>Linköping University, 2024–2026</span>
+        <div class="boss-hp">
+          <span class="pixel small">BOSS HP</span>
+          <div class="boss-hp-bar"><div id="boss-hp-fill"></div></div>
+        </div>
+      </header>
+
+      <!-- Briefing -->
+      <div class="stage reveal">
+        <div class="stage-label pixel small">STAGE 1 · MISSION BRIEFING</div>
+        <div class="briefing px">
+          <p class="big-q">“Given a woman's sociodemographic profile and the pool of eligible men in her city, can a model
+            identify the man she <em>actually</em> married?”</p>
+          <p>
+            Sociology knows a lot about <strong>who marries whom</strong> on average: people tend to pair up with
+            partners like themselves (<em>assortative mating</em>). Much less is known about whether that
+            pattern is strong enough to <strong>predict an individual choice</strong>. This thesis treats partner
+            choice as a prediction problem and uses machine learning to test what the answer says about two
+            competing theories:
+          </p>
+          <div class="versus">
+            <div class="vs-card">
+              <span class="pixel small cyan">EXCHANGE THEORY</span>
+              <p>Partners are weighed on several traits at once, and a weakness on one can be <strong>traded off</strong> against a strength on another. Preferences are smooth and compensatory.</p>
+            </div>
+            <div class="vs-badge pixel">VS</div>
+            <div class="vs-card">
+              <span class="pixel small pink">BOUNDARY THEORY</span>
+              <p>Sorting is categorical. Some traits are <strong>deal-breakers</strong> that filter out whole groups before anything else counts.</p>
             </div>
           </div>
-          <div class="highlight-card">
-            <span class="highlight-icon">🔬</span>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="stage reveal">
+        <div class="stage-label pixel small">STAGE 2 · THE MAP</div>
+        <p class="stage-intro">American Community Survey via IPUMS USA: about 1% of the U.S. population is surveyed each year. The sample is recently married (within 3 years), co-residing couples in identifiable metro areas.</p>
+        <div class="counters">
+          <div class="counter px"><b data-count="7">0</b><span>survey years<br><small>2016–19 &amp; 2021–23 (2020 skipped: COVID)</small></span></div>
+          <div class="counter px"><b data-count="325808">0</b><span>recently married women<br><small>after sample restrictions</small></span></div>
+          <div class="counter px"><b data-count="111">0</b><span>U.S. metro areas<br><small>670 metro-year marriage markets</small></span></div>
+          <div class="counter px"><b data-count="3000" data-suffix="+">0</b><span>eligible men<br><small>in the biggest markets (NYC, LA)</small></span></div>
+        </div>
+        <div class="map-facts">
+          <div class="fact px"><span class="pixel small yellow">AGE</span><p>Young couples are usually the same age. From the late twenties the husband tends to be older, and the median gap grows to about 5–6 years for men in their 40s–50s.</p></div>
+          <div class="fact px"><span class="pixel small yellow">RACE</span><p>Same-race marriage: 87.4% of White women, 85.1% of Black women, 70.3% of Hispanic women and 66.4% of Asian women.</p></div>
+          <div class="fact px"><span class="pixel small yellow">EDUCATION</span><p>A strong but imperfect diagonal: 54% of high-school-graduate women married high-school-graduate men, and 46% of women with a bachelor's married men with a bachelor's.</p></div>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div class="stage reveal">
+        <div class="stage-label pixel small">STAGE 3 · THE RULES</div>
+        <div class="rules">
+          <div class="rule px">
+            <span class="rule-n pixel">1</span>
+            <h4>Build a choice set</h4>
+            <p>Each woman is paired with her real husband plus 9 decoys: men from the same metro and year she could plausibly have met.</p>
+            <div class="dots" aria-hidden="true"><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="rule px">
+            <span class="rule-n pixel">2</span>
+            <h4>Learn couple-level features</h4>
+            <p>Only three ingredients: <strong>age gap</strong>, <strong>education gap</strong> and <strong>same race/ethnicity</strong>. Each describes the pair, not either person alone.</p>
+          </div>
+          <div class="rule px">
+            <span class="rule-n pixel">3</span>
+            <h4>Rank the whole city</h4>
+            <p>Score <em>every</em> eligible man in her metro and see where the real husband lands. <strong>50% = random guessing</strong>, and lower is better.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini-game -->
+      <div class="stage reveal" id="minigame">
+        <div class="stage-label pixel small">STAGE 4 · MINI-GAME: THINK LIKE THE MODEL</div>
+        <div class="game px">
+          <div class="game-head">
             <div>
-              <strong>Research Intern</strong>
-              <span>Institute for Analytical Sociology (IAS), LiU</span>
+              <p class="pixel small muted">HER PROFILE</p>
+              <p class="her" id="her">…</p>
+            </div>
+            <div class="game-score">
+              <span class="pixel small">ROUND <b id="g-round">1</b></span>
+              <span class="pixel small">MATCHED <b id="g-score">0</b></span>
             </div>
           </div>
-          <div class="highlight-card">
-            <span class="highlight-icon">🏛️</span>
-            <div>
-              <strong>BA Philosophy, Politics &amp; Society</strong>
-              <span>Radboud University, 2021–2024</span>
+          <p class="game-prompt" id="g-prompt">Which candidate does the thesis's conditional logit model rate as her most likely husband? Tap one.</p>
+          <div class="candidates" id="candidates"></div>
+          <div class="game-foot">
+            <p class="game-msg" id="g-msg"></p>
+            <button class="btn btn-cyan btn-sm" id="g-next" hidden>NEXT ROUND ▶</button>
+          </div>
+          <p class="fine">Uses the linear conditional logit's real estimated coefficients (same race +1.65, man older +0.77, each year of age gap −0.22, each education step apart −0.57) on randomly generated profiles. It shows what the model prefers, not real people. The thesis used choice sets of 10; this round uses 6.</p>
+        </div>
+      </div>
+
+      <!-- Models -->
+      <div class="stage reveal">
+        <div class="stage-label pixel small">STAGE 5 · CHOOSE YOUR FIGHTER</div>
+        <p class="stage-intro">Four models, ordered from simple to flexible. The forest acts as a <strong>specification diagnostic</strong>: if partner choice runs on hard thresholds (boundary theory), a model that learns thresholds on its own should win.</p>
+        <div class="fighters">
+          <div class="fighter px">
+            <span class="pixel small muted">M1</span>
+            <h4>Linear Clogit</h4>
+            <p class="ft">Baseline · straight-line preferences</p>
+            <div class="fstat"><span>PARAMS</span><b>6</b></div>
+            <div class="fstat"><span>METRO RANK</span><b>15.0%</b></div>
+          </div>
+          <div class="fighter px winner">
+            <span class="crown" aria-hidden="true">👑</span>
+            <span class="pixel small muted">M2</span>
+            <h4>Spline Clogit</h4>
+            <p class="ft">Smooth curves for age &amp; education</p>
+            <div class="fstat"><span>PARAMS</span><b>9</b></div>
+            <div class="fstat"><span>METRO RANK</span><b>14.2%</b></div>
+          </div>
+          <div class="fighter px">
+            <span class="pixel small muted">M3</span>
+            <h4>Forest (core)</h4>
+            <p class="ft">Conditional logit forest · 50 trees</p>
+            <div class="fstat"><span>PARAMS</span><b>≤ 7,450</b></div>
+            <div class="fstat"><span>METRO RANK</span><b>14.7%</b></div>
+          </div>
+          <div class="fighter px">
+            <span class="pixel small muted">M4</span>
+            <h4>Forest (full)</h4>
+            <p class="ft">+ the man's racial group</p>
+            <div class="fstat"><span>PARAMS</span><b>≤ 12,450</b></div>
+            <div class="fstat"><span>METRO RANK</span><b>14.4%</b></div>
+          </div>
+        </div>
+
+        <div class="race px">
+          <p class="pixel small block-title">FINAL SCORE · where the real husband ranks among all eligible men in his city <span class="muted">(lower = better)</span></p>
+          <div class="race-row"><span>Random guess</span><div class="race-bar"><i data-w="50" class="r-rand"></i></div><b>50%</b></div>
+          <div class="race-row"><span>Linear Clogit</span><div class="race-bar"><i data-w="15.0"></i></div><b>15.0%</b></div>
+          <div class="race-row"><span>Forest (core)</span><div class="race-bar"><i data-w="14.7"></i></div><b>14.7%</b></div>
+          <div class="race-row"><span>Forest (full)</span><div class="race-bar"><i data-w="14.4"></i></div><b>14.4%</b></div>
+          <div class="race-row win"><span>Spline Clogit 👑</span><div class="race-bar"><i data-w="14.2" class="r-win"></i></div><b>14.2%</b></div>
+          <p class="race-note">With only age, education and race, every model puts the real husband in roughly the <strong>top 14–15%</strong> of all men in his city. In the 10-man choice set the top pick is right about <strong>half the time</strong>, against 10% by chance. A <strong>9-parameter</strong> spline matches a forest with thousands of parameters.</p>
+        </div>
+      </div>
+
+      <!-- Ablation -->
+      <div class="stage reveal" id="ablation">
+        <div class="stage-label pixel small">STAGE 6 · POWER-UPS</div>
+        <p class="stage-intro">Turn predictors on and off to see what each one is worth. These are the actual ablation results from the linear model.</p>
+        <div class="powerups px">
+          <div class="pu-buttons" role="group" aria-label="Predictors">
+            <button class="pu on" data-k="A" aria-pressed="true"><span>⏳</span>AGE</button>
+            <button class="pu on" data-k="E" aria-pressed="true"><span>📚</span>EDUCATION</button>
+            <button class="pu on" data-k="R" aria-pressed="true"><span>🤝</span>RACE</button>
+          </div>
+          <div class="pu-readout">
+            <div class="pu-big"><span class="pixel small muted">METRO RANK</span><b id="pu-rank">15.0%</b></div>
+            <div class="pu-big"><span class="pixel small muted">TOP-1 HIT</span><b id="pu-top1">49.2%</b></div>
+          </div>
+          <div class="pu-gauge">
+            <div class="pu-track">
+              <div class="pu-marker" id="pu-marker"></div>
+            </div>
+            <div class="pu-ticks"><span>0%</span><span>25%</span><span>50% · random</span></div>
+          </div>
+          <p class="pu-msg" id="pu-msg">Full power: the real husband sits in the top 15% of his city's men.</p>
+        </div>
+        <div class="plot-twist px">
+          <span class="pixel small pink">PLOT TWIST</span>
+          <p>Race has the <strong>biggest coefficient</strong> (b = 1.65, so crossing a racial boundary weighs about as much as 7.5 extra years of age gap). Yet dropping <strong>age</strong> hurts prediction about <strong>5× more</strong> (+13.5 pp vs +2.8 pp). The reason is variance. Race is one yes/no switch, and in many cities a same-race match happens by chance anyway. Age varies across decades, so it can sort hundreds of candidates much more finely. <em>A big coefficient is not the same thing as predictive power.</em></p>
+        </div>
+      </div>
+
+      <!-- Cities -->
+      <div class="stage reveal" id="cities">
+        <div class="stage-label pixel small">STAGE 7 · WORLD SELECT</div>
+        <div class="world-head">
+          <p class="stage-intro">The models were re-run on every woman in four cities, before and after COVID. The spline model won <strong>7 of 8</strong> city-period matches.</p>
+          <div class="period" role="group" aria-label="Period">
+            <button class="period-btn on" data-p="0" aria-pressed="true">2016–17</button>
+            <button class="period-btn" data-p="1" aria-pressed="false">2022–23</button>
+          </div>
+        </div>
+        <div class="worlds" id="worlds"></div>
+        <p class="world-note">More diverse markets are harder to predict. Diversity doesn't weaken preferences, but same-race matches become rarer by chance, so the race signal carries less information. Atlanta (82.4% same-race marriage) is the easiest level and San Francisco (69.5%) the hardest.</p>
+      </div>
+
+      <!-- Hypotheses -->
+      <div class="stage reveal">
+        <div class="stage-label pixel small">STAGE 8 · SCOREBOARD</div>
+        <div class="scoreboard">
+          <div class="hyp px ok">
+            <span class="hyp-icon">✔</span>
+            <div><span class="pixel small">H1 · SUPPORTED</span><p>Age, education and race together beat any subset. Each adds a signal the other two can't replace.</p></div>
+          </div>
+          <div class="hyp px half">
+            <span class="hyp-icon">◐</span>
+            <div><span class="pixel small">H2 · PARTIAL</span><p>The forest beats the <em>linear</em> model, but a well-specified spline matches or beats the forest. The forest's edge came from misspecification, not deal-breaker preferences.</p></div>
+          </div>
+          <div class="hyp px no">
+            <span class="hyp-icon">✘</span>
+            <div><span class="pixel small">H3 · NOT SUPPORTED</span><p>Race was expected to matter most for prediction. In fact age is the most important predictor, both in the ablation and in the forest's own permutation importance (0.152 vs 0.073).</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loot -->
+      <div class="stage reveal">
+        <div class="stage-label pixel small">STAGE 9 · LOOT DROPPED</div>
+        <div class="loot-grid">
+          <div class="loot px">
+            <span class="loot-icon">💎</span>
+            <h4>Love is fairly predictable</h4>
+            <p>Three demographic traits put the true husband in the top ~14% of every eligible man in his city.</p>
+          </div>
+          <div class="loot px">
+            <span class="loot-icon">🧭</span>
+            <h4>ML as a diagnostic</h4>
+            <p>Use the forest to find out what a simple model misses, then rebuild it in an interpretable form instead of swapping in a black box.</p>
+          </div>
+          <div class="loot px">
+            <span class="loot-icon">⚖️</span>
+            <h4>Exchange &gt; boundaries</h4>
+            <p>At population scale, smooth compensatory trade-offs describe partner choice at least as well as hard categorical filters.</p>
+          </div>
+          <div class="loot px">
+            <span class="loot-icon">⏳</span>
+            <h4>Life-course timing</h4>
+            <p>Age does most of the sorting work, so <em>when</em> people marry may matter more than the literature has assumed.</p>
+          </div>
+        </div>
+
+        <div class="boss-foot">
+          <div class="px limits">
+            <p class="pixel small block-title">KNOWN GLITCHES (LIMITATIONS)</p>
+            <ul>
+              <li>Observational: it predicts who she married, not who she would have preferred.</li>
+              <li>Only age, education and race. Personality, values and attraction aren't in the data.</li>
+              <li>Married, co-residing couples only, modelled from the woman's side.</li>
+            </ul>
+          </div>
+          <div class="px toolkit">
+            <p class="pixel small block-title">EQUIPMENT</p>
+            <div class="chips">
+              <span>R</span><span>survival::clogit</span><span>CLogitTree</span><span>fastclogit</span>
+              <span>natural splines</span><span>tidyverse</span><span>ipumsr</span><span>Quarto</span><span>IPUMS ACS</span>
             </div>
           </div>
-          <div class="highlight-card">
-            <span class="highlight-icon">🌍</span>
-            <div>
-              <strong>International Summer School</strong>
-              <span>Yonsei University, Seoul, 2024</span>
-            </div>
-          </div>
+        </div>
+        <div class="victory reveal" id="victory">
+          <p class="pixel">★ BOSS DEFEATED ★</p>
+          <p class="muted">Prediction and explanation work best together. Coefficients show the direction of a preference; ablation shows how much each one actually contributes.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PROJECTS -->
-  <section id="projects">
+  <!-- ═════════ LEVEL 4 · SIDE QUESTS ═════════ -->
+  <section id="sidequests" class="section alt" data-level="LV 4 · SIDE QUESTS">
     <div class="container">
-      <h2>Projects</h2>
-      <p class="section-desc">Research and data projects I'm working on or have completed.</p>
+      <header class="sec-head reveal">
+        <span class="pixel lvl">LEVEL 4</span>
+        <h2>Side quests</h2>
+      </header>
+      <div class="side-grid">
+        <article class="side px reveal">
+          <span class="badge done">COMPLETED</span>
+          <h3>Social network dynamics &amp; partnership formation</h3>
+          <p class="muted">Institute for Analytical Sociology, LiU · Aug 2025 – Jan 2026</p>
+          <p>Worked with a research team applying machine learning to map complex social network dynamics. Processed and cleaned large-scale survey and census data and helped design the pipeline the thesis was built on.</p>
+          <div class="chips"><span>R</span><span>Random Forest</span><span>Logistic Regression</span><span>Data Cleaning</span></div>
+        </article>
+        <article class="side px reveal">
+          <span class="badge done">COMPLETED</span>
+          <h3>Agent-based social simulations</h3>
+          <p class="muted">MSc Computational Social Science · Linköping University</p>
+          <p>Built agent-based models to test hypotheses and optimise outcomes in simulated social environments, watching population-level patterns emerge from individual rules.</p>
+          <div class="chips"><span>Agent-Based Modelling</span><span>R</span><span>Simulation</span></div>
+        </article>
+        <article class="side px locked reveal">
+          <div class="lock">🔒</div>
+          <p class="pixel small">NEW QUEST LOADING<span class="dots-anim"></span></p>
+          <p class="muted">Open to research collaborations and data roles.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-      <div class="projects-grid">
+  <!-- ═════════ LEVEL 5 · TROPHY ROOM ═════════ -->
+  <section id="trophies" class="section" data-level="LV 5 · TROPHY ROOM">
+    <div class="container">
+      <header class="sec-head reveal">
+        <span class="pixel lvl">LEVEL 5</span>
+        <h2>Trophy room</h2>
+        <p class="sec-desc">Honours, certificates and other loot collected along the way.</p>
+      </header>
 
-        <!-- THESIS PROJECT -->
-        <article class="project-card featured">
-          <div class="project-tag">Master's Thesis · In Progress</div>
-          <h3>How Predictable is Love?</h3>
-          <p class="project-sub">Assortative Mating &amp; Machine Learning · Linköping University</p>
-          <p>
-            Applying Random Forest and conditional logit models to millions of observations
-            from US Census data to quantify how predictable partnership formation is
-            from sociodemographic characteristics such as age, education, income, and ethnicity.
-          </p>
-          <div class="project-tags">
-            <span>R</span>
-            <span>Random Forest</span>
-            <span>Conditional Logit</span>
-            <span>Census Data</span>
-            <span>Assortative Mating</span>
+      <div class="trophy-grid">
+        <article class="trophy legendary px reveal">
+          <div class="trophy-top">
+            <span class="trophy-icon" aria-hidden="true">🏅</span>
+            <div>
+              <span class="rarity pixel small">LEGENDARY</span>
+              <h3>Interdisciplinary Honours Degree</h3>
+              <p class="muted">Radboud University · June 2024</p>
+            </div>
           </div>
+          <p>An honours programme completed alongside the BA, working with students from other disciplines.</p>
+          <ul class="perks">
+            <li><b>Climate exhibition.</b> Partnered with art house <strong>LUX</strong> and a multidisciplinary student team to design and curate a public exhibition on climate change awareness.</li>
+            <li><b>Science translation.</b> Completed a specialised module on turning complex scientific data into language non-technical audiences can follow.</li>
+          </ul>
+          <div class="chips"><span>Curation</span><span>SciComm</span><span>Teamwork</span><span>Climate</span></div>
         </article>
 
-        <!-- INTERNSHIP PROJECT -->
-        <article class="project-card">
-          <div class="project-tag">Research Internship · Completed</div>
-          <h3>Social Network Dynamics &amp; Partnership Formation</h3>
-          <p class="project-sub">Institute for Analytical Sociology (IAS), LiU · Aug 2025 – Jan 2026</p>
-          <p>
-            Collaborated with a research team applying machine learning methods to map
-            complex social network dynamics. Processed and cleaned large-scale survey
-            and census datasets, and contributed to designing the analytical pipeline
-            for the thesis research.
-          </p>
-          <div class="project-tags">
-            <span>R</span>
-            <span>Random Forest</span>
-            <span>Logistic Regression</span>
-            <span>Data Cleaning</span>
+        <article class="trophy epic px reveal">
+          <div class="trophy-top">
+            <span class="trophy-icon" aria-hidden="true">🌱</span>
+            <div>
+              <span class="rarity pixel small">EPIC</span>
+              <h3>Sustainability Certificate</h3>
+              <p class="muted">Radboud University · September 2024</p>
+            </div>
           </div>
+          <p>30 EC of interdisciplinary coursework across the Management and Science faculties, covering the SDGs and resource management, and how to apply them strategically in companies and organisations.</p>
+          <div class="chips"><span>30 EC</span><span>SDGs</span><span>Strategy</span></div>
         </article>
 
-        <!-- PLACEHOLDER FOR FUTURE PROJECTS -->
-        <article class="project-card add-project">
-          <div class="add-icon">+</div>
-          <p>More projects coming soon</p>
+        <article class="trophy rare px reveal">
+          <div class="trophy-top">
+            <span class="trophy-icon" aria-hidden="true">🌏</span>
+            <div>
+              <span class="rarity pixel small">RARE</span>
+              <h3>International Summer School</h3>
+              <p class="muted">Yonsei University · Seoul · June – July 2024</p>
+            </div>
+          </div>
+          <p>Intensive Social Sciences coursework in a highly international cohort, with plenty of cross-cultural communication and adapting on the fly.</p>
+          <div class="chips"><span>Certificate</span><span>Seoul</span><span>Cross-cultural</span></div>
         </article>
-
       </div>
     </div>
   </section>
 
-  <!-- SKILLS -->
-  <section id="skills">
+  <!-- ═════════ LEVEL 6 · INVENTORY ═════════ -->
+  <section id="inventory" class="section alt" data-level="LV 6 · INVENTORY">
     <div class="container">
-      <h2>Skills</h2>
-      <div class="skills-grid">
-        <div class="skill-group">
-          <h4>Technical &amp; Data</h4>
-          <ul>
-            <li>R &amp; RStudio (Advanced)</li>
-            <li>Machine Learning (Random Forest, Logistic Regression)</li>
-            <li>Agent-Based Modelling</li>
-            <li>Large-Scale Data Processing</li>
-            <li>Quantitative Analysis</li>
-            <li>Data Visualisation</li>
-          </ul>
+      <header class="sec-head reveal">
+        <span class="pixel lvl">LEVEL 6</span>
+        <h2>Inventory</h2>
+        <p class="sec-desc">Hover or tap an item to inspect it.</p>
+      </header>
+      <div class="inv px reveal">
+        <p class="pixel small block-title">TECHNICAL &amp; DATA</p>
+        <div class="slots">
+          <button class="slot" data-tip="R &amp; RStudio · Advanced. Everything in the thesis is R."><span>📈</span>R</button>
+          <button class="slot" data-tip="Random forests, logistic regression, conditional logit forests"><span>🌲</span>ML</button>
+          <button class="slot" data-tip="Conditional logit · McFadden-style discrete choice models"><span>🎯</span>Choice models</button>
+          <button class="slot" data-tip="Agent-based modelling of social systems"><span>🤖</span>ABM</button>
+          <button class="slot" data-tip="Large-scale data processing: millions of census records"><span>🗄️</span>Big data</button>
+          <button class="slot" data-tip="Quantitative analysis &amp; statistical inference"><span>🧮</span>Quant</button>
+          <button class="slot" data-tip="Data visualisation"><span>🎨</span>Dataviz</button>
+          <button class="slot" data-tip="Data cleansing, validation, exploratory analysis &amp; feature engineering"><span>🧹</span>Data prep</button>
+          <button class="slot" data-tip="Python"><span>🐍</span>Python</button>
+          <button class="slot" data-tip="Excel"><span>📗</span>Excel</button>
+          <button class="slot" data-tip="Quarto &amp; LaTeX for reproducible writing"><span>📜</span>Quarto</button>
         </div>
-        <div class="skill-group">
-          <h4>Core Competencies</h4>
-          <ul>
-            <li>Strategic Leadership</li>
-            <li>Budget Management</li>
-            <li>Science Communication</li>
-            <li>AI &amp; Ethics Governance</li>
-            <li>Sustainability Strategy</li>
-            <li>Cross-Functional Collaboration</li>
-          </ul>
+        <p class="pixel small block-title">CORE COMPETENCIES</p>
+        <div class="slots">
+          <button class="slot" data-tip="Strategic leadership: LinCSS President, leading the executive board"><span>👑</span>Leadership</button>
+          <button class="slot" data-tip="Budget management: statutory financial signatory for LinCSS"><span>💰</span>Budget</button>
+          <button class="slot" data-tip="Science communication: honours module on explaining science to non-technical audiences"><span>📣</span>SciComm</button>
+          <button class="slot" data-tip="AI &amp; ethics governance"><span>⚖️</span>AI ethics</button>
+          <button class="slot" data-tip="Sustainability strategy: 30 EC Sustainability Certificate"><span>🌱</span>Sustain.</button>
+          <button class="slot" data-tip="Cross-functional collaboration in international teams"><span>🤝</span>Teamwork</button>
+          <button class="slot" data-tip="Event organisation: Open Days at Radboud, LinCSS events"><span>🎪</span>Events</button>
         </div>
-        <div class="skill-group">
-          <h4>Languages</h4>
-          <ul>
-            <li>Bulgarian — Native</li>
-            <li>English — C2 Proficient</li>
-          </ul>
-        </div>
+        <p class="inv-tip" id="inv-tip" aria-live="polite">&nbsp;</p>
       </div>
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="container contact-inner">
-      <h2>Get in Touch</h2>
-      <p>I'm open to research collaborations, internships, and interesting conversations.</p>
-      <div class="contact-links">
-        <a href="mailto:alexandrabocheva1@gmail.com" class="btn-primary">alexandrabocheva1@gmail.com</a>
-        <a href="https://linkedin.com/in/aleksandra-bocheva-a667a1252" class="btn-secondary" target="_blank">LinkedIn</a>
+  <!-- ═════════ LEVEL 6 · CONTINUE ═════════ -->
+  <section id="contact" class="section contact" data-level="LV 7 · CONTINUE?">
+    <div class="container contact-inner reveal">
+      <p class="pixel continue">CONTINUE? <span id="countdown">9</span></p>
+      <h2>Player 2, ready?</h2>
+      <div class="dialog">
+        <img src="avatar.jpg" alt="Aleksandra Bocheva" width="360" height="360" loading="lazy" />
+        <div class="dialog-box px">
+          <span class="pixel small yellow">ALEKSANDRA</span>
+          <p>Hi! I'm open to research collaborations, data roles and good conversations. Say hello ▼</p>
+        </div>
       </div>
-      <p class="location">Based in Norrköping, Sweden</p>
+      <div class="hero-links center">
+        <a href="mailto:alexandrabocheva1@gmail.com" class="btn btn-pink">✉ INSERT COIN</a>
+        <a href="https://linkedin.com/in/aleksandra-bocheva-a667a1252" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <p class="muted small-text">alexandrabocheva1@gmail.com · Norrköping, Sweden</p>
     </div>
   </section>
 
   <footer>
-    <p>© 2026 Aleksandra Bocheva</p>
+    <p>© 2026 Aleksandra Bocheva · <span class="muted">psst… ↑ ↑ ↓ ↓ ← → ← → B A</span></p>
   </footer>
 
+  <script src="script.js"></script>
 </body>
 </html>
