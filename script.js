@@ -7,18 +7,178 @@
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ───────── i18n ─────────
+     Static text: elements carry data-i18n="key" (innerHTML) and
+     data-i18n-attr="attr:key …". Translations live in lang/<code>.js and are
+     loaded on demand; anything missing falls back to the English in the HTML.
+     Dynamic text (mini-game, achievements, …) uses UI_EN below as fallback. */
+  const LANGS = {
+    en: { short: 'EN', name: 'English', locale: 'en-US', html: 'en' },
+    sv: { short: 'SV', name: 'Svenska', locale: 'sv-SE', html: 'sv' },
+    bg: { short: 'BG', name: 'Български', locale: 'bg-BG', html: 'bg' },
+    de: { short: 'DE', name: 'Deutsch', locale: 'de-DE', html: 'de' },
+    zh: { short: '中文', name: '中文', locale: 'zh-CN', html: 'zh-Hans' },
+  };
+  const UI_EN = {
+    lang: 'Language',
+    achUnlocked: 'ACHIEVEMENT UNLOCKED',
+    achSecret: 'A secret…',
+    ach: {
+      start: ['Press Start', 'Began the adventure'],
+      character: ['Character Inspected', 'Read the character sheet'],
+      quests: ['Quest Log Read', 'Followed the route so far'],
+      boss: ['Boss Encountered', 'Entered the thesis level'],
+      game: ['Model Whisperer', 'Played a round against the model'],
+      power: ['Power Player', 'Toggled a predictor power-up'],
+      victory: ['Boss Defeated', 'Reached the end of the thesis'],
+      trophies: ['Trophy Hunter', 'Visited the trophy room'],
+      contact: ['Completionist', 'Made it to the continue screen'],
+      konami: ['Secret Code', '↑↑↓↓←→←→BA'],
+    },
+    phrases: ['Computational Social Scientist', 'Machine Learning × Sociology', 'Discrete-Choice Modeller', 'Data Researcher', 'Partner-Choice Predictor'],
+    edu: ['less than high school', 'high school', 'some college', "bachelor's", 'advanced degree'],
+    her: '{age} years old · {edu}',
+    sameAge: 'same age',
+    older: '{n} yr older',
+    younger: '{n} yr younger',
+    candAria: 'Candidate {name}',
+    candHead: 'CANDIDATE {name}',
+    age: 'Age {age}',
+    sameRace: 'Same race/ethnicity:',
+    yes: 'yes',
+    no: 'no',
+    win: '✓ Same pick as the model. It gives Candidate {name} a {p} chance.',
+    lose: '✗ The model prefers Candidate {name} ({p}). The deciding factor was {factor}.',
+    factor: { same: 'sharing her race/ethnicity', older: 'being older than her', gap: 'a smaller age gap', edu: 'a closer education level', hyper: 'his education level', hypo: 'his education level' },
+    abl: {
+      AER: "Full power: the real husband sits in the top 15% of his city's men.",
+      AE: 'Race removed: only 2.8 pp worse. Less than its big coefficient suggests.',
+      ER: 'Age removed: the rank nearly doubles to 28.6%. Age does the most work.',
+      AR: 'Education removed: +1.3 pp. It adds the least on top of the others.',
+      A: 'Age alone already finds the husband in the top fifth of the city.',
+      R: 'Race alone: 35.1%. The largest coefficient, but a blunt yes/no signal.',
+      E: 'Education alone: 37.3%, the weakest of the three solo.',
+      '': 'No predictors left, so this is pure random guessing.',
+    },
+    cities: { atl: 'Atlanta', la: 'Los Angeles', bos: 'Boston', sf: 'San Francisco' },
+    diff: { easy: 'EASY', normal: 'NORMAL', hard: 'HARD', expert: 'EXPERT' },
+    worldRank: 'spline metro rank · {n} men',
+    winner: 'Winner: {w}',
+    splineWin: '👑 Spline clogit',
+    forestFull: 'Forest (full), {p}',
+    countdownDone: 'YES',
+  };
+
+  let lang = 'en';
+  let UI = UI_EN;
+  const packs = { en: { html: {}, ui: {} } };
+  const t = (k, vars) => {
+    let s = UI[k] !== undefined ? UI[k] : UI_EN[k];
+    if (vars) for (const v in vars) s = s.split('{' + v + '}').join(vars[v]);
+    return s;
+  };
+  const sub = (group, k) => (UI[group] && UI[group][k] !== undefined ? UI[group][k] : UI_EN[group][k]);
+  const num = (v, d = 0) => new Intl.NumberFormat(LANGS[lang].locale, { minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
+  const pct = (v, d = 0) => num(v, d) + '%';
+
+  // Remember the English originals so switching back needs no extra file.
+  const origHTML = new Map();
+  const origAttr = new Map();
+  $$('[data-i18n]').forEach(el => origHTML.set(el, el.innerHTML));
+  $$('[data-i18n-attr]').forEach(el => {
+    const m = {};
+    el.dataset.i18nAttr.split(/\s+/).forEach(pair => { const [a] = pair.split(':'); m[a] = el.getAttribute(a); });
+    origAttr.set(el, m);
+  });
+
+  function applyStatic(pack) {
+    const H = pack.html || {};
+    origHTML.forEach((en, el) => {
+      const k = el.dataset.i18n;
+      const v = H[k] !== undefined ? H[k] : en;
+      if (el.innerHTML !== v) el.innerHTML = v;
+    });
+    origAttr.forEach((en, el) => {
+      el.dataset.i18nAttr.split(/\s+/).forEach(pair => {
+        const [a, k] = pair.split(':');
+        el.setAttribute(a, H[k] !== undefined ? H[k] : en[a]);
+      });
+    });
+  }
+
+  function loadPack(code) {
+    if (packs[code]) return Promise.resolve(packs[code]);
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = `lang/${code}.js?v=1`;
+      s.onload = () => {
+        const p = window.SITE_I18N && window.SITE_I18N[code];
+        if (!p) return reject(new Error('missing pack ' + code));
+        packs[code] = p;
+        resolve(p);
+      };
+      s.onerror = () => reject(new Error('failed to load ' + code));
+      document.head.appendChild(s);
+    });
+  }
+
+  const langWrap = $('#lang');
+  const langBtn = $('#lang-btn');
+  const langMenu = $('#lang-menu');
+  const langItems = $$('#lang-menu [data-lang]');
+  const rerender = [];   // dynamic parts register here
+
+  function setMenu(open) {
+    langMenu.hidden = !open;
+    langBtn.setAttribute('aria-expanded', open);
+    if (open) (langItems.find(b => b.dataset.lang === lang) || langItems[0]).focus();
+  }
+
+  async function setLang(code, save = true) {
+    if (!LANGS[code]) code = 'en';
+    let pack;
+    try { pack = await loadPack(code); }
+    catch (e) { console.warn(e); code = 'en'; pack = packs.en; }
+    lang = code;
+    UI = Object.assign({}, UI_EN, pack.ui || {});
+    applyStatic(pack);
+    document.documentElement.lang = LANGS[code].html;
+    $('#lang-cur').textContent = LANGS[code].short;
+    langBtn.setAttribute('aria-label', `${t('lang')}: ${LANGS[code].name}`);
+    langBtn.title = t('lang');
+    langItems.forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === code));
+    rerender.forEach(fn => fn());
+    if (save) {
+      try { localStorage.setItem('ab-lang', code); } catch (e) { /* storage blocked */ }
+      try {
+        const u = new URL(location.href);
+        if (u.searchParams.has('lang')) { u.searchParams.set('lang', code); history.replaceState(null, '', u); }
+      } catch (e) { /* ignore */ }
+    }
+  }
+
+  langBtn.addEventListener('click', e => { e.stopPropagation(); setMenu(langMenu.hidden); });
+  langItems.forEach(b => b.addEventListener('click', () => { setMenu(false); langBtn.focus(); setLang(b.dataset.lang); }));
+  langMenu.addEventListener('keydown', e => {
+    const i = langItems.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); langItems[(i + 1) % langItems.length].focus(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); langItems[(i - 1 + langItems.length) % langItems.length].focus(); }
+  });
+  document.addEventListener('click', e => { if (!langWrap.contains(e.target)) setMenu(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !langMenu.hidden) { setMenu(false); langBtn.focus(); } });
+
   /* ───────── Achievements ───────── */
   const ACH = [
-    { id: 'start',     icon: '▶️', name: 'Press Start',        desc: 'Began the adventure' },
-    { id: 'character', icon: '🧙', name: 'Character Inspected', desc: 'Read the character sheet' },
-    { id: 'quests',    icon: '📜', name: 'Quest Log Read',      desc: 'Followed the route so far' },
-    { id: 'boss',      icon: '💘', name: 'Boss Encountered',    desc: 'Entered the thesis level' },
-    { id: 'game',      icon: '🎯', name: 'Model Whisperer',     desc: 'Played a round against the model' },
-    { id: 'power',     icon: '⚡', name: 'Power Player',        desc: 'Toggled a predictor power-up' },
-    { id: 'victory',   icon: '🏆', name: 'Boss Defeated',       desc: 'Reached the end of the thesis' },
-    { id: 'trophies',  icon: '🏅', name: 'Trophy Hunter',       desc: 'Visited the trophy room' },
-    { id: 'contact',   icon: '🪙', name: 'Completionist',       desc: 'Made it to the continue screen' },
-    { id: 'konami',    icon: '🕹️', name: 'Secret Code',         desc: '↑↑↓↓←→←→BA', secret: true },
+    { id: 'start',     icon: '▶️' },
+    { id: 'character', icon: '🧙' },
+    { id: 'quests',    icon: '📜' },
+    { id: 'boss',      icon: '💘' },
+    { id: 'game',      icon: '🎯' },
+    { id: 'power',     icon: '⚡' },
+    { id: 'victory',   icon: '🏆' },
+    { id: 'trophies',  icon: '🏅' },
+    { id: 'contact',   icon: '🪙' },
+    { id: 'konami',    icon: '🕹️', secret: true },
   ];
   const got = new Set();
   const achCount = $('#ach-count');
@@ -34,11 +194,13 @@
       const has = got.has(a.id);
       if (has) li.className = 'got';
       const hidden = a.secret && !has;
-      li.innerHTML = `<span class="ai">${hidden ? '❔' : a.icon}</span><span><strong>${hidden ? '???' : a.name}</strong><br>${hidden ? 'A secret…' : a.desc}</span>`;
+      const [name, desc] = sub('ach', a.id);
+      li.innerHTML = `<span class="ai">${hidden ? '❔' : a.icon}</span><span><strong>${hidden ? '???' : name}</strong><br>${hidden ? t('achSecret') : desc}</span>`;
       achList.appendChild(li);
     });
     achCount.textContent = got.size;
   }
+  rerender.push(renderAch);
 
   function unlock(id) {
     if (got.has(id)) return;
@@ -47,11 +209,11 @@
     got.add(id);
     renderAch();
     trophyBtn.classList.remove('bump'); void trophyBtn.offsetWidth; trophyBtn.classList.add('bump');
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.innerHTML = `<span class="ti">${a.icon}</span><div><b>ACHIEVEMENT UNLOCKED</b><span>${a.name}</span></div>`;
-    $('#toasts').appendChild(t);
-    setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 320); }, 2800);
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<span class="ti">${a.icon}</span><div><b>${t('achUnlocked')}</b><span>${sub('ach', id)[0]}</span></div>`;
+    $('#toasts').appendChild(el);
+    setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 2800);
   }
 
   trophyBtn.addEventListener('click', () => { achPanel.hidden = !achPanel.hidden; });
@@ -95,7 +257,7 @@
     }
     ctx.globalAlpha = 1;
   }
-  function loop(t) { drawStars(t); requestAnimationFrame(loop); }
+  function loop(time) { drawStars(time); requestAnimationFrame(loop); }
   makeStars();
   window.addEventListener('resize', makeStars);
   if (reduceMotion) { drawStars(); window.addEventListener('scroll', () => drawStars(), { passive: true }); }
@@ -103,30 +265,28 @@
 
   /* ───────── Typewriter ───────── */
   const tw = $('#typewriter');
-  const phrases = [
-    'Computational Social Scientist',
-    'Machine Learning × Sociology',
-    'Discrete-Choice Modeller',
-    'Data Researcher',
-    'Partner-Choice Predictor',
-  ];
+  let phrases = UI_EN.phrases;
+  let pi = 0, ci = phrases[0].length, deleting = true;
   if (!reduceMotion) {
-    let pi = 0, ci = phrases[0].length, deleting = true;
     const tick = () => {
-      const p = phrases[pi];
       if (deleting) {
         ci--;
         if (ci <= 0) { deleting = false; pi = (pi + 1) % phrases.length; }
       } else {
         ci++;
       }
-      tw.textContent = phrases[pi].slice(0, ci);
+      tw.textContent = [...phrases[pi]].slice(0, Math.max(ci, 0)).join('');
       let delay = deleting ? 35 : 70;
-      if (!deleting && ci === phrases[pi].length) { deleting = true; delay = 2200; }
+      if (!deleting && ci >= [...phrases[pi]].length) { deleting = true; delay = 2200; }
       setTimeout(tick, delay);
     };
     setTimeout(tick, 2600);
   }
+  rerender.push(() => {
+    phrases = t('phrases');
+    pi = 0; ci = [...phrases[0]].length; deleting = false;
+    tw.textContent = phrases[0];
+  });
 
   /* ───────── HUD: XP bar, level, active nav ───────── */
   const xpFill = $('#xp-fill');
@@ -172,6 +332,7 @@
   }, { passive: true });
   window.addEventListener('resize', onScroll);
   onScroll();
+  rerender.push(onScroll);
 
   /* ───────── Reveal + section achievements ───────── */
   const io = new IntersectionObserver(entries => {
@@ -199,28 +360,33 @@
   function countUp(el) {
     const target = +el.dataset.count;
     const suffix = el.dataset.suffix || '';
-    if (reduceMotion) { el.textContent = target.toLocaleString('en-US') + suffix; return; }
+    const finish = () => { el.dataset.done = '1'; el.textContent = num(target) + suffix; };
+    if (reduceMotion) { finish(); return; }
     const dur = 1400, t0 = performance.now();
     const step = now => {
       const k = clamp((now - t0) / dur, 0, 1);
       const eased = 1 - Math.pow(1 - k, 3);
-      el.textContent = Math.round(target * eased).toLocaleString('en-US') + (k === 1 ? suffix : '');
-      if (k < 1) requestAnimationFrame(step);
+      if (k === 1) { finish(); return; }
+      el.textContent = num(Math.round(target * eased));
+      requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
   }
+  rerender.push(() => {
+    $$('[data-count][data-done]').forEach(el => { el.textContent = num(+el.dataset.count) + (el.dataset.suffix || ''); });
+  });
 
   /* ───────── Mini-game: think like the model ─────────
      Linear conditional logit coefficients (thesis, Fig. 4.1):
      same race 1.65 · man older 0.77 · |age gap| −0.22 · |educ diff| −0.57
      hypergamy (man more educated) −0.21 · hypogamy (man less educated) 0.07 */
   const B = { same: 1.65, older: 0.77, gap: -0.22, edu: -0.57, hyper: -0.21, hypo: 0.07 };
-  const EDU = ['less than high school', 'high school', 'some college', "bachelor's", 'advanced degree'];
   const NAMES = ['A', 'B', 'C', 'D', 'E', 'F'];
   const HAIR = ['#ffd166', '#ff6fb5', '#4fe3d1', '#a77bff', '#ff9f43', '#7ee787', '#5b8cff'];
   const SHIRT = ['#3b2f6b', '#24998c', '#b23f7c', '#5b3fa8', '#2f6fb2', '#a35b1f'];
   const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
   function sprite(hair, shirt) {
     const rows = ['..HHHH..', '.HHHHHH.', '.HFFFFH.', '.FEFFEF.', '.FFFFFF.', '..FFFF..', '.SSSSSS.', 'SSSSSSSS'];
@@ -267,40 +433,43 @@
       if (probs[order[0]] - probs[order[1]] > 0.06) break;
     }
     men.forEach((m, i) => { m.p = probs[i]; });
-    state = { w, men, best: order[0], done: false };
+    state = { w, men, best: order[0], picked: null };
+    renderRound();
+  }
 
-    $('#her').textContent = `${w.age} years old · ${EDU[w.edu]}`;
+  function renderRound() {
+    const { w, men } = state;
+    const edu = t('edu');
+    $('#her').textContent = t('her', { age: w.age, edu: edu[w.edu] });
     $('#g-round').textContent = round;
-    msg.textContent = ''; msg.className = 'game-msg';
-    nextBtn.hidden = true;
     candBox.classList.remove('revealed');
     candBox.innerHTML = '';
     men.forEach((m, i) => {
       const gap = m.age - w.age;
-      const gapTxt = gap === 0 ? 'same age' : (gap > 0 ? `${gap} yr older` : `${-gap} yr younger`);
+      const gapTxt = gap === 0 ? t('sameAge') : (gap > 0 ? t('older', { n: gap }) : t('younger', { n: -gap }));
       const b = document.createElement('button');
       b.className = 'cand';
       b.type = 'button';
-      b.setAttribute('aria-label', `Candidate ${m.name}`);
+      b.setAttribute('aria-label', t('candAria', { name: m.name }));
       b.innerHTML = `${sprite(m.hair, m.shirt)}
-        <div><h5>CANDIDATE ${m.name}</h5>
+        <div><h5>${t('candHead', { name: m.name })}</h5>
           <ul>
-            <li>Age ${m.age} <span class="muted">(${gapTxt})</span></li>
-            <li>${EDU[m.edu].charAt(0).toUpperCase() + EDU[m.edu].slice(1)}</li>
-            <li>Same race/ethnicity: ${m.same ? '<span class="cyan">yes</span>' : '<span class="muted">no</span>'}</li>
+            <li>${t('age', { age: m.age })} <span class="muted">(${gapTxt})</span></li>
+            <li>${cap(edu[m.edu])}</li>
+            <li>${t('sameRace')} ${m.same ? `<span class="cyan">${t('yes')}</span>` : `<span class="muted">${t('no')}</span>`}</li>
           </ul></div>
-        <div class="prob"><i style="--p:${(m.p * 100).toFixed(1)}%"></i><span>${(m.p * 100).toFixed(0)}%</span></div>`;
+        <div class="prob"><i style="--p:${(m.p * 100).toFixed(1)}%"></i><span>${pct(m.p * 100)}</span></div>`;
       b.addEventListener('click', () => choose(i));
       candBox.appendChild(b);
     });
+    showResult();
   }
 
-  const LABEL = { same: 'sharing her race/ethnicity', older: 'being older than her', gap: 'a smaller age gap', edu: 'a closer education level', hyper: 'his education level', hypo: 'his education level' };
-
-  function choose(i) {
-    if (!state || state.done) return;
-    state.done = true;
-    unlock('game');
+  function showResult() {
+    msg.textContent = ''; msg.className = 'game-msg';
+    nextBtn.hidden = state.picked === null;
+    if (state.picked === null) return;
+    const i = state.picked;
     const cards = $$('.cand', candBox);
     cards.forEach(c => { c.disabled = true; });
     candBox.classList.add('revealed');
@@ -308,8 +477,7 @@
     cards[i].classList.add('picked');
     const best = state.men[state.best];
     if (i === state.best) {
-      score++;
-      msg.textContent = `✓ Same pick as the model. It gives Candidate ${best.name} a ${(best.p * 100).toFixed(0)}% chance.`;
+      msg.textContent = t('win', { name: best.name, p: pct(best.p * 100) });
       msg.classList.add('win');
     } else {
       cards[i].classList.add('wrong');
@@ -319,37 +487,39 @@
         const d = best.u[k] - mine.u[k];
         if (d > topD) { topD = d; topK = k; }
       }
-      msg.textContent = `✗ The model prefers Candidate ${best.name} (${(best.p * 100).toFixed(0)}%). The deciding factor was ${LABEL[topK]}.`;
+      msg.textContent = t('lose', { name: best.name, p: pct(best.p * 100), factor: sub('factor', topK) });
       msg.classList.add('lose');
     }
+  }
+
+  function choose(i) {
+    if (!state || state.picked !== null) return;
+    state.picked = i;
+    unlock('game');
+    if (i === state.best) score++;
     $('#g-score').textContent = score;
-    nextBtn.hidden = false;
+    showResult();
   }
   nextBtn.addEventListener('click', () => { round++; newRound(); });
   newRound();
+  rerender.push(renderRound);
 
   /* ───────── Power-ups (ablation, Table 4.5) ───────── */
   const ABL = {
-    AER: [15.02, 49.2, 'Full power: the real husband sits in the top 15% of his city\'s men.'],
-    AE:  [17.81, 39.2, 'Race removed: only 2.8 pp worse. Less than its big coefficient suggests.'],
-    ER:  [28.55, 29.8, 'Age removed: the rank nearly doubles to 28.6%. Age does the most work.'],
-    AR:  [16.35, 45.0, 'Education removed: +1.3 pp. It adds the least on top of the others.'],
-    A:   [20.01, 34.7, 'Age alone already finds the husband in the top fifth of the city.'],
-    R:   [35.06, 21.0, 'Race alone: 35.1%. The largest coefficient, but a blunt yes/no signal.'],
-    E:   [37.34, 19.5, 'Education alone: 37.3%, the weakest of the three solo.'],
-    '':  [50.0, 10.0, 'No predictors left, so this is pure random guessing.'],
+    AER: [15.02, 49.2], AE: [17.81, 39.2], ER: [28.55, 29.8], AR: [16.35, 45.0],
+    A: [20.01, 34.7], R: [35.06, 21.0], E: [37.34, 19.5], '': [50.0, 10.0],
   };
   const puBtns = $$('.pu');
   const puRank = $('#pu-rank'), puTop = $('#pu-top1'), puMarker = $('#pu-marker'), puMsg = $('#pu-msg');
   function updatePU() {
     const key = puBtns.filter(b => b.classList.contains('on')).map(b => b.dataset.k).join('');
-    const [rank, top1, text] = ABL[key];
-    puRank.textContent = rank.toFixed(1) + '%';
-    puTop.textContent = top1.toFixed(1) + '%';
+    const [rank, top1] = ABL[key];
+    puRank.textContent = pct(rank, 1);
+    puTop.textContent = pct(top1, 1);
     puRank.classList.toggle('bad', rank > 25);
     puTop.classList.toggle('bad', top1 < 30);
     puMarker.style.left = (rank / 50 * 100) + '%';
-    puMsg.textContent = text;
+    puMsg.textContent = sub('abl', key);
   }
   puBtns.forEach(b => b.addEventListener('click', () => {
     b.classList.toggle('on');
@@ -358,65 +528,75 @@
     updatePU();
   }));
   updatePU();
+  rerender.push(updatePU);
 
   /* ───────── World select (Table 4.4, spline clogit) ───────── */
   const CITIES = [
-    { name: 'Atlanta',       r: [11.07, 10.92], n: [1135, 1099], win: ['Spline', 'Spline'] },
-    { name: 'Los Angeles',   r: [12.55, 12.91], n: [2552, 2034], win: ['Spline', 'Spline'] },
-    { name: 'Boston',        r: [14.17, 13.60], n: [928, 901],   win: ['Spline', 'Spline'] },
-    { name: 'San Francisco', r: [14.25, 16.54], n: [1066, 841],  win: ['Spline', 'Forest (full), 16.51%'] },
+    { id: 'atl', r: [11.07, 10.92], n: [1135, 1099], forest: [null, null] },
+    { id: 'la',  r: [12.55, 12.91], n: [2552, 2034], forest: [null, null] },
+    { id: 'bos', r: [14.17, 13.60], n: [928, 901],   forest: [null, null] },
+    { id: 'sf',  r: [14.25, 16.54], n: [1066, 841],  forest: [null, 16.51] },
   ];
   const worlds = $('#worlds');
+  let period = 0;
   function diff(r) {
-    if (r < 12) return ['EASY', '★☆☆☆', 'easy'];
-    if (r < 13.5) return ['NORMAL', '★★☆☆', ''];
-    if (r < 15) return ['HARD', '★★★☆', ''];
-    return ['EXPERT', '★★★★', 'hard'];
+    if (r < 12) return ['easy', '★☆☆☆', 'easy'];
+    if (r < 13.5) return ['normal', '★★☆☆', ''];
+    if (r < 15) return ['hard', '★★★☆', ''];
+    return ['expert', '★★★★', 'hard'];
   }
-  function renderWorlds(p) {
+  function renderWorlds() {
+    const p = period;
     worlds.innerHTML = '';
     CITIES.forEach(c => {
       const r = c.r[p];
       const [label, starsTxt, cls] = diff(r);
+      const f = c.forest[p];
       const el = document.createElement('div');
       el.className = 'world px ' + cls;
-      el.innerHTML = `<h4>${c.name}</h4>
-        <p class="diff">${starsTxt}<em>${label}</em></p>
-        <div class="wr">${r.toFixed(1)}%</div>
-        <p class="wl">spline metro rank · ${c.n[p].toLocaleString('en-US')} men</p>
+      el.innerHTML = `<h4>${sub('cities', c.id)}</h4>
+        <p class="diff">${starsTxt}<em>${sub('diff', label)}</em></p>
+        <div class="wr">${pct(r, 1)}</div>
+        <p class="wl">${t('worldRank', { n: num(c.n[p]) })}</p>
         <div class="wbar"><i style="width:${(r / 20 * 100).toFixed(1)}%"></i></div>
-        <p class="wl">Winner: ${c.win[p] === 'Spline' ? '👑 Spline clogit' : c.win[p]}</p>`;
+        <p class="wl">${t('winner', { w: f === null ? t('splineWin') : t('forestFull', { p: pct(f, 2) }) })}</p>`;
       worlds.appendChild(el);
     });
   }
   $$('.period-btn').forEach(b => b.addEventListener('click', () => {
     $$('.period-btn').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
-    renderWorlds(+b.dataset.p);
+    period = +b.dataset.p;
+    renderWorlds();
   }));
-  renderWorlds(0);
+  renderWorlds();
+  rerender.push(renderWorlds);
 
   /* ───────── Inventory tooltips ───────── */
   const tip = $('#inv-tip');
+  let tipSlot = null;
+  const showTip = () => { if (tipSlot) tip.textContent = '› ' + tipSlot.dataset.tip; };
   $$('.slot').forEach(s => {
-    const show = () => { $$('.slot').forEach(x => x.classList.toggle('sel', x === s)); tip.textContent = '› ' + s.dataset.tip; };
+    const show = () => { tipSlot = s; $$('.slot').forEach(x => x.classList.toggle('sel', x === s)); showTip(); };
     s.addEventListener('mouseenter', show);
     s.addEventListener('focus', show);
     s.addEventListener('click', show);
   });
+  rerender.push(showTip);
 
   /* ───────── Continue countdown ───────── */
-  let counting = false;
+  let counting = false, countDone = false;
+  const cdEl = $('#countdown');
   function startCountdown() {
     if (counting) return;
     counting = true;
-    const el = $('#countdown');
     let n = 9;
     const iv = setInterval(() => {
       n--;
-      if (n <= 0) { clearInterval(iv); el.textContent = 'YES'; return; }
-      el.textContent = n;
+      if (n <= 0) { clearInterval(iv); countDone = true; cdEl.textContent = t('countdownDone'); return; }
+      cdEl.textContent = n;
     }, 700);
   }
+  rerender.push(() => { if (countDone) cdEl.textContent = t('countdownDone'); });
 
   /* ───────── Konami ───────── */
   const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -439,4 +619,13 @@
       setTimeout(() => h.remove(), 5000);
     }
   }
+
+  /* ───────── Initial language: ?lang= → saved choice → English ───────── */
+  let initial = 'en';
+  try { initial = localStorage.getItem('ab-lang') || 'en'; } catch (e) { /* storage blocked */ }
+  try {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q && LANGS[q]) initial = q;
+  } catch (e) { /* ignore */ }
+  if (initial !== 'en') setLang(initial, false);
 })();
