@@ -546,6 +546,19 @@ h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); line-height: 1.05; letter-spacing: -
 .dots-anim::after { content: ""; animation: dots 1.5s steps(4) infinite; }
 @keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
 
+/* ── mini-boss (BA thesis) ── */
+.miniboss { grid-column: 1 / -1; padding: 2rem; border-color: var(--pink); }
+.mb-head { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.miniboss h3 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.3; margin-bottom: 0.3rem; }
+.miniboss > .muted { font-size: 0.92rem; }
+.mb-premise { margin: 1.2rem 0; max-width: 820px; }
+.mb-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.mb-phase { background: var(--panel-2); border: 2px solid var(--line); border-top: 4px solid var(--pink); padding: 1rem 1.1rem; }
+.mb-phase .pixel { color: var(--pink); }
+.mb-phase p { margin-top: 0.5rem; font-size: 0.93rem; }
+.mb-result { margin-top: 1.3rem; background: var(--shadow); padding: 1rem 1.2rem; }
+.mb-thread { margin-top: 1rem; color: var(--muted); font-size: 0.93rem; }
+
 /* ── trophy room ── */
 .trophy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
 .trophy { padding: 1.6rem; display: flex; flex-direction: column; gap: 0.9rem; transition: transform 0.2s; }
@@ -624,6 +637,8 @@ footer { text-align: center; padding: 2rem 1rem 2.5rem; border-top: 3px solid va
   .counters, .fighters, .worlds, .loot-grid { grid-template-columns: repeat(2, 1fr); }
   .map-facts, .rules, .side-grid, .trophy-grid { grid-template-columns: 1fr; }
   .trophy.legendary { grid-row: auto; }
+  .mb-phases { grid-template-columns: 1fr; }
+  .miniboss { padding: 1.3rem; }
   .candidates { grid-template-columns: repeat(2, 1fr); }
   .powerups { grid-template-columns: 1fr; }
   .boss-foot { grid-template-columns: 1fr; }
