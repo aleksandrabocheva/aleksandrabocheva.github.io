@@ -4,16 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-i18n="head.1">Aleksandra Bocheva</title>
-  <meta name="description" content="Aleksandra Bocheva — computational social scientist. Machine learning, discrete choice models and the sociology of partner choice."  data-i18n-attr="content:head.2"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="description" content="Aleksandra Bocheva, computational social scientist. Machine learning, discrete choice models and the sociology of partner choice."  data-i18n-attr="content:head.2"/>
+  <link rel="stylesheet" href="fonts.css" />
   <link rel="stylesheet" href="style.css" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
-  <canvas id="stars" aria-hidden="true"></canvas>
 
   <!-- ═════════ HUD ═════════ -->
   <header class="hud">
@@ -29,7 +26,7 @@
     </nav>
     <div class="lang" id="lang">
       <button class="lang-btn" id="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Language: English" title="Language">
-        <span aria-hidden="true">🌐</span><span id="lang-cur">EN</span><span class="lang-caret" aria-hidden="true">▾</span>
+        <span id="lang-cur">EN</span>
       </button>
       <ul class="lang-menu" id="lang-menu" hidden>
         <li><button type="button" data-lang="en" lang="en" aria-pressed="true"><b>EN</b>English</button></li>
@@ -40,7 +37,7 @@
       </ul>
     </div>
     <button class="hud-trophy" id="trophy-btn" aria-label="Achievements" data-i18n-attr="aria-label:hud.10">
-      <span aria-hidden="true">🏆</span> <span id="ach-count">0</span>/<span id="ach-total">8</span>
+      <svg class="cup" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M1 0h6v4h-1v1h-1v1h1v1h1v1h-6v-1h1v-1h1v-1h-1v-1h-1zM0 1h1v2h-1zM7 1h1v2h-1z"/></svg> <span id="ach-count">0</span>/<span id="ach-total">8</span>
     </button>
     <div class="xp" aria-hidden="true">
       <div class="xp-fill" id="xp-fill"></div>
@@ -63,7 +60,7 @@
   <section id="start" class="hero" data-level="LV 0 · TITLE" data-i18n-attr="data-level:start.1">
     <div class="hero-inner">
       <div class="hero-text">
-        <p class="pixel tag blink-slow" data-i18n="start.2">PLAYER 1 · READY</p>
+        <p class="pixel tag" data-i18n="start.2">PLAYER 1 · READY</p>
         <h1 data-i18n="start.3">Aleksandra<br><span class="grad">Bocheva</span></h1>
         <p class="hero-class">
           <span class="pixel small muted" data-i18n="start.4">CLASS&nbsp;›</span>
@@ -75,7 +72,7 @@
           can an algorithm work out who someone married?
         </p>
         <div class="hero-links">
-          <a href="#character" class="btn btn-pink" id="press-start" data-i18n="start.6">▶ PRESS START</a>
+          <a href="#character" class="btn btn-pink" id="press-start" data-i18n="start.6">PRESS START</a>
           <a href="#thesis" class="btn btn-ghost" data-i18n="start.7">Skip to boss</a>
         </div>
       </div>
@@ -91,13 +88,13 @@
           <span class="corner bl"></span><span class="corner br"></span>
         </div>
         <div class="player-meters">
-          <div class="meter"><span data-i18n="start.11">CURIOSITY</span><div class="meter-bar"><i style="--w:100%;--c:var(--pink)"></i></div><b>∞</b></div>
-          <div class="meter"><span data-i18n="start.12">R-FU</span><div class="meter-bar"><i style="--w:90%;--c:var(--cyan)"></i></div><b data-i18n="start.13">ADV</b></div>
-          <div class="meter"><span data-i18n="start.14">THEORY</span><div class="meter-bar"><i style="--w:85%;--c:var(--violet)"></i></div><b data-i18n="start.15">PPS</b></div>
+          <div class="meter"><span data-i18n="start.11">CURIOSITY</span><div class="meter-bar"><i style="--w:100%"></i></div><b>∞</b></div>
+          <div class="meter"><span data-i18n="start.12">R-FU</span><div class="meter-bar"><i style="--w:90%"></i></div><b data-i18n="start.13">ADV</b></div>
+          <div class="meter"><span data-i18n="start.14">THEORY</span><div class="meter-bar"><i style="--w:85%"></i></div><b data-i18n="start.15">PPS</b></div>
         </div>
       </div>
     </div>
-    <a href="#character" class="scroll-hint pixel small" aria-label="Scroll down" data-i18n="start.17" data-i18n-attr="aria-label:start.16">SCROLL TO PLAY<br>▼</a>
+    <a href="#character" class="scroll-hint pixel small" aria-label="Scroll down" data-i18n="start.17" data-i18n-attr="aria-label:start.16">SCROLL TO PLAY</a>
   </section>
 
   <!-- ═════════ LEVEL 1 · CHARACTER ═════════ -->
@@ -169,14 +166,14 @@
           <div class="px traits reveal">
             <p class="pixel small block-title" data-i18n="character.25">TRAITS</p>
             <div class="chips">
-              <span data-i18n="character.26">🧠 Analytical sociology</span>
-              <span data-i18n="character.27">📊 Discrete choice</span>
-              <span data-i18n="character.28">🌲 Tree ensembles</span>
-              <span data-i18n="character.29">🗣️ Science communication</span>
-              <span data-i18n="character.30">🏛️ Leadership</span>
-              <span data-i18n="character.31">⚖️ AI ethics</span>
-              <span data-i18n="character.32">🌱 Sustainability</span>
-              <span data-i18n="character.33">🌍 International teams</span>
+              <span data-i18n="character.26">Analytical sociology</span>
+              <span data-i18n="character.27">Discrete choice</span>
+              <span data-i18n="character.28">Tree ensembles</span>
+              <span data-i18n="character.29">Science communication</span>
+              <span data-i18n="character.30">Leadership</span>
+              <span data-i18n="character.31">AI ethics</span>
+              <span data-i18n="character.32">Sustainability</span>
+              <span data-i18n="character.33">International teams</span>
             </div>
           </div>
         </div>
@@ -197,20 +194,20 @@
         <div class="timeline-track"><div class="timeline-fill" id="timeline-fill"></div></div>
         <ol>
         <li class="quest reveal">
-          <div class="quest-node">🏛️</div>
+          <div class="quest-node" aria-hidden="true"></div>
           <div class="quest-card px">
             <div class="quest-meta"><span class="pixel small">2021 – 2024</span><span class="badge done" data-i18n="quests.5">CLEARED</span></div>
             <h3 data-i18n="quests.6">BA Philosophy, Politics &amp; Society</h3>
             <p class="muted" data-i18n="quests.7">Radboud University · Nijmegen, NL · Aug 2021 – Sep 2024</p>
             <p data-i18n="quests.8">Built an analytical framework for societal challenges, policy design and organisational ethics, with a focus on how technology and systemic change affect human behaviour and institutional trust.</p>
-            <p class="bonus" data-i18n="quests.9">★ Mini-boss: <a href="#ba-thesis">thesis on conspiracy beliefs &amp; climate change</a></p>
-            <p class="bonus" data-i18n="quests.10">★ Bonus: <a href="#trophies">Interdisciplinary Honours Degree</a> + <a href="#trophies">Sustainability Certificate</a></p>
+            <p class="bonus" data-i18n="quests.9">Mini-boss: <a href="#ba-thesis">thesis on conspiracy beliefs &amp; climate change</a></p>
+            <p class="bonus" data-i18n="quests.10">Bonus: <a href="#trophies">Interdisciplinary Honours Degree</a> + <a href="#trophies">Sustainability Certificate</a></p>
             <span class="xp-reward" data-i18n="quests.11">+ THEORY</span>
           </div>
         </li>
 
         <li class="quest reveal">
-          <div class="quest-node">📣</div>
+          <div class="quest-node" aria-hidden="true"></div>
           <div class="quest-card px">
             <div class="quest-meta"><span class="pixel small" data-i18n="quests.12">OCT 2022 – SEP 2024</span><span class="badge done" data-i18n="quests.5">CLEARED</span></div>
             <h3 data-i18n="quests.13">Student Recruiter</h3>
@@ -221,7 +218,7 @@
         </li>
 
         <li class="quest reveal">
-          <div class="quest-node">🎓</div>
+          <div class="quest-node" aria-hidden="true"></div>
           <div class="quest-card px">
             <div class="quest-meta"><span class="pixel small" data-i18n="quests.17">AUG 2024 – SEP 2026</span><span class="badge done" data-i18n="quests.5">CLEARED</span></div>
             <h3 data-i18n="quests.18">MSc Computational Social Science</h3>
@@ -232,21 +229,21 @@
         </li>
 
         <li class="quest reveal">
-          <div class="quest-node">🛡️</div>
+          <div class="quest-node" aria-hidden="true"></div>
           <div class="quest-card px">
             <div class="quest-meta"><span class="pixel small" data-i18n="quests.22">OCT 2024 – JUN 2026</span><span class="badge guild" data-i18n="quests.23">GUILD</span></div>
             <h3 data-i18n="quests.24">LinCSS: Head of PR → President</h3>
             <p class="muted" data-i18n="quests.25">Association for Computational Social Science · Linköping University</p>
             <div class="ranks">
               <div class="rank"><span class="pixel small" data-i18n="quests.26">RANK 1 · OCT 2024 – OCT 2025</span><p data-i18n="quests.27"><strong>Head of PR &amp; Social Media.</strong> Ran external communications and social media, and coordinated academic and social events connecting students, alumni and faculty.</p></div>
-              <div class="rank up"><span class="pixel small" data-i18n="quests.28">RANK UP ▲ · OCT 2025 – JUN 2026</span><p data-i18n="quests.29"><strong>President.</strong> Led the executive board on governance and strategy, and was the association's statutory financial signatory, responsible for its budget, bank accounts and compliance.</p></div>
+              <div class="rank up"><span class="pixel small" data-i18n="quests.28">RANK UP · OCT 2025 – JUN 2026</span><p data-i18n="quests.29"><strong>President.</strong> Led the executive board on governance and strategy, and was the association's statutory financial signatory, responsible for its budget, bank accounts and compliance.</p></div>
             </div>
             <span class="xp-reward" data-i18n="quests.30">+ LEADERSHIP</span>
           </div>
         </li>
 
         <li class="quest reveal">
-          <div class="quest-node">🔬</div>
+          <div class="quest-node" aria-hidden="true"></div>
           <div class="quest-card px">
             <div class="quest-meta"><span class="pixel small" data-i18n="quests.31">AUG 2025 – JAN 2026</span><span class="badge done" data-i18n="quests.5">CLEARED</span></div>
             <h3 data-i18n="quests.32">Research Intern</h3>
@@ -257,12 +254,12 @@
         </li>
 
         <li class="quest boss reveal">
-          <div class="quest-node">💘</div>
+          <div class="quest-node" aria-hidden="true"></div>
           <div class="quest-card px">
             <div class="quest-meta"><span class="pixel small" data-i18n="quests.36">SPRING 2026</span><span class="badge bossbadge" data-i18n="quests.37">BOSS</span></div>
             <h3 data-i18n="quests.38">Master's thesis: How Predictable is Love?</h3>
             <p data-i18n="quests.39">Can a model pick a woman's real husband out of every eligible man in her city? The full breakdown is in the next level.</p>
-            <a href="#thesis" class="btn btn-pink btn-sm" data-i18n="quests.40">ENTER BOSS LEVEL ▶</a>
+            <a href="#thesis" class="btn btn-pink btn-sm" data-i18n="quests.40">ENTER BOSS LEVEL</a>
           </div>
         </li>
         </ol>
@@ -270,13 +267,12 @@
     </div>
   </section>
 
-  <!-- ═════════ LEVEL 3 · BOSS — THESIS ═════════ -->
+  <!-- ═════════ LEVEL 3 · BOSS · THESIS ═════════ -->
   <section id="thesis" class="section boss-section" data-level="LV 3 · BOSS" data-i18n-attr="data-level:thesis.1">
-    <div class="hearts" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="container">
 
       <header class="boss-head reveal">
-        <p class="pixel warn blink" data-i18n="thesis.2">⚠ BOSS APPROACHING ⚠</p>
+        <p class="pixel warn" data-i18n="thesis.2">BOSS APPROACHING</p>
         <span class="pixel lvl" data-i18n="thesis.3">LEVEL 3 · MASTER'S THESIS</span>
         <h2 class="boss-title" data-i18n="thesis.4">How Predictable is <span class="grad">Love?</span></h2>
         <p class="boss-sub" data-i18n="thesis.5">Machine Learning meets Partner Choice</p>
@@ -342,12 +338,11 @@
             <span class="rule-n pixel">1</span>
             <h4 data-i18n="thesis.30">Build a choice set</h4>
             <p data-i18n="thesis.31">Each woman is paired with her real husband plus 9 decoys: men from the same metro and year she could plausibly have met.</p>
-            <div class="dots" aria-hidden="true"><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           </div>
           <div class="rule px">
             <span class="rule-n pixel">2</span>
             <h4 data-i18n="thesis.32">Learn couple-level features</h4>
-            <p data-i18n="thesis.33">Only three ingredients: <strong>age gap</strong>, <strong>education gap</strong> and <strong>same race/ethnicity</strong>. Each describes the pair, not either person alone.</p>
+            <p data-i18n="thesis.33">Only three ingredients: <strong>age gap</strong>, <strong>education gap</strong> and <strong>same race/ethnicity</strong>. Each one describes the couple as a unit.</p>
           </div>
           <div class="rule px">
             <span class="rule-n pixel">3</span>
@@ -375,9 +370,9 @@
           <div class="candidates" id="candidates"></div>
           <div class="game-foot">
             <p class="game-msg" id="g-msg"></p>
-            <button class="btn btn-cyan btn-sm" id="g-next" hidden data-i18n="thesis.41">NEXT ROUND ▶</button>
+            <button class="btn btn-cyan btn-sm" id="g-next" hidden data-i18n="thesis.41">NEXT ROUND</button>
           </div>
-          <p class="fine" data-i18n="thesis.42">Uses the linear conditional logit's real estimated coefficients (same race +1.65, man older +0.77, each year of age gap −0.22, each education step apart −0.57) on randomly generated profiles. It shows what the model prefers, not real people. The thesis used choice sets of 10; this round uses 6.</p>
+          <p class="fine" data-i18n="thesis.42">Uses the linear conditional logit's real estimated coefficients (same race +1.65, man older +0.77, each year of age gap −0.22, each education step apart −0.57) on randomly generated profiles. The profiles are invented and the preferences come from the model. The thesis used choice sets of 10; this round uses 6.</p>
         </div>
       </div>
 
@@ -394,7 +389,6 @@
             <div class="fstat"><span data-i18n="thesis.49">METRO RANK</span><b data-i18n="thesis.50">15.0%</b></div>
           </div>
           <div class="fighter px winner">
-            <span class="crown" aria-hidden="true">👑</span>
             <span class="pixel small muted" data-i18n="thesis.51">M2</span>
             <h4 data-i18n="thesis.52">Spline Clogit</h4>
             <p class="ft" data-i18n="thesis.53">Smooth curves for age &amp; education</p>
@@ -423,7 +417,7 @@
           <div class="race-row"><span data-i18n="thesis.46">Linear Clogit</span><div class="race-bar"><i data-w="15.0"></i></div><b data-i18n="thesis.50">15.0%</b></div>
           <div class="race-row"><span data-i18n="thesis.56">Forest (core)</span><div class="race-bar"><i data-w="14.7"></i></div><b data-i18n="thesis.59">14.7%</b></div>
           <div class="race-row"><span data-i18n="thesis.61">Forest (full)</span><div class="race-bar"><i data-w="14.4"></i></div><b data-i18n="thesis.64">14.4%</b></div>
-          <div class="race-row win"><span data-i18n="thesis.67">Spline Clogit 👑</span><div class="race-bar"><i data-w="14.2" class="r-win"></i></div><b data-i18n="thesis.54">14.2%</b></div>
+          <div class="race-row win"><span data-i18n="thesis.67">Spline Clogit</span><div class="race-bar"><i data-w="14.2" class="r-win"></i></div><b data-i18n="thesis.54">14.2%</b></div>
           <p class="race-note" data-i18n="thesis.68">With only age, education and race, every model puts the real husband in roughly the <strong>top 14–15%</strong> of all men in his city. In the 10-man choice set the top pick is right about <strong>half the time</strong>, against 10% by chance. A <strong>9-parameter</strong> spline matches a forest with thousands of parameters.</p>
         </div>
       </div>
@@ -434,9 +428,9 @@
         <p class="stage-intro" data-i18n="thesis.70">Turn predictors on and off to see what each one is worth. These are the actual ablation results from the linear model.</p>
         <div class="powerups px">
           <div class="pu-buttons" role="group" aria-label="Predictors" data-i18n-attr="aria-label:thesis.71">
-            <button class="pu on" data-k="A" aria-pressed="true" data-i18n="thesis.72"><span>⏳</span>AGE</button>
-            <button class="pu on" data-k="E" aria-pressed="true" data-i18n="thesis.73"><span>📚</span>EDUCATION</button>
-            <button class="pu on" data-k="R" aria-pressed="true" data-i18n="thesis.74"><span>🤝</span>RACE</button>
+            <button class="pu on" data-k="A" aria-pressed="true" data-i18n="thesis.72">AGE</button>
+            <button class="pu on" data-k="E" aria-pressed="true" data-i18n="thesis.73">EDUCATION</button>
+            <button class="pu on" data-k="R" aria-pressed="true" data-i18n="thesis.74">RACE</button>
           </div>
           <div class="pu-readout">
             <div class="pu-big"><span class="pixel small muted" data-i18n="thesis.49">METRO RANK</span><b id="pu-rank">15.0%</b></div>
@@ -452,7 +446,7 @@
         </div>
         <div class="plot-twist px">
           <span class="pixel small pink" data-i18n="thesis.77">PLOT TWIST</span>
-          <p data-i18n="thesis.78">Race has the <strong>biggest coefficient</strong> (b = 1.65, so crossing a racial boundary weighs about as much as 7.5 extra years of age gap). Yet dropping <strong>age</strong> hurts prediction about <strong>5× more</strong> (+13.5 pp vs +2.8 pp). The reason is variance. Race is one yes/no switch, and in many cities a same-race match happens by chance anyway. Age varies across decades, so it can sort hundreds of candidates much more finely. <em>A big coefficient is not the same thing as predictive power.</em></p>
+          <p data-i18n="thesis.78">Race has the <strong>biggest coefficient</strong> (b = 1.65, so crossing a racial boundary weighs about as much as 7.5 extra years of age gap). Yet dropping <strong>age</strong> hurts prediction about <strong>5× more</strong> (+13.5 pp vs +2.8 pp). The reason is variance. Race is one yes/no switch, and in many cities a same-race match happens by chance anyway. Age varies across decades, so it can sort hundreds of candidates much more finely. <em>Coefficient size and predictive power measure different things.</em></p>
         </div>
       </div>
 
@@ -467,7 +461,7 @@
           </div>
         </div>
         <div class="worlds" id="worlds"></div>
-        <p class="world-note" data-i18n="thesis.82">More diverse markets are harder to predict. Diversity doesn't weaken preferences, but same-race matches become rarer by chance, so the race signal carries less information. Atlanta (82.4% same-race marriage) is the easiest level and San Francisco (69.5%) the hardest.</p>
+        <p class="world-note" data-i18n="thesis.82">More diverse markets are harder to predict. Same-race matches happen less often by chance there, so the race signal carries less information even when preferences stay just as strong. Atlanta (82.4% same-race marriage) is the easiest level and San Francisco (69.5%) the hardest.</p>
       </div>
 
       <!-- Hypotheses -->
@@ -475,15 +469,12 @@
         <div class="stage-label pixel small" data-i18n="thesis.83">STAGE 8 · SCOREBOARD</div>
         <div class="scoreboard">
           <div class="hyp px ok">
-            <span class="hyp-icon">✔</span>
             <div><span class="pixel small" data-i18n="thesis.84">H1 · SUPPORTED</span><p data-i18n="thesis.85">Age, education and race together beat any subset. Each adds a signal the other two can't replace.</p></div>
           </div>
           <div class="hyp px half">
-            <span class="hyp-icon">◐</span>
-            <div><span class="pixel small" data-i18n="thesis.86">H2 · PARTIAL</span><p data-i18n="thesis.87">The forest beats the <em>linear</em> model, but a well-specified spline matches or beats the forest. The forest's edge came from misspecification, not deal-breaker preferences.</p></div>
+            <div><span class="pixel small" data-i18n="thesis.86">H2 · PARTIAL</span><p data-i18n="thesis.87">The forest beats the <em>linear</em> model, but a well-specified spline matches or beats the forest. The forest's edge came from misspecification in the linear model.</p></div>
           </div>
           <div class="hyp px no">
-            <span class="hyp-icon">✘</span>
             <div><span class="pixel small" data-i18n="thesis.88">H3 · NOT SUPPORTED</span><p data-i18n="thesis.89">Race was expected to matter most for prediction. In fact age is the most important predictor, both in the ablation and in the forest's own permutation importance (0.152 vs 0.073).</p></div>
           </div>
         </div>
@@ -494,22 +485,18 @@
         <div class="stage-label pixel small" data-i18n="thesis.90">STAGE 9 · LOOT DROPPED</div>
         <div class="loot-grid">
           <div class="loot px">
-            <span class="loot-icon">💎</span>
             <h4 data-i18n="thesis.91">Love is fairly predictable</h4>
             <p data-i18n="thesis.92">Three demographic traits put the true husband in the top ~14% of every eligible man in his city.</p>
           </div>
           <div class="loot px">
-            <span class="loot-icon">🧭</span>
             <h4 data-i18n="thesis.93">ML as a diagnostic</h4>
-            <p data-i18n="thesis.94">Use the forest to find out what a simple model misses, then rebuild it in an interpretable form instead of swapping in a black box.</p>
+            <p data-i18n="thesis.94">Use the forest to find out what a simple model misses, then rebuild the simple model in an interpretable form.</p>
           </div>
           <div class="loot px">
-            <span class="loot-icon">⚖️</span>
             <h4 data-i18n="thesis.95">Exchange &gt; boundaries</h4>
             <p data-i18n="thesis.96">At population scale, smooth compensatory trade-offs describe partner choice at least as well as hard categorical filters.</p>
           </div>
           <div class="loot px">
-            <span class="loot-icon">⏳</span>
             <h4 data-i18n="thesis.97">Life-course timing</h4>
             <p data-i18n="thesis.98">Age does most of the sorting work, so <em>when</em> people marry may matter more than the literature has assumed.</p>
           </div>
@@ -519,7 +506,7 @@
           <div class="px limits">
             <p class="pixel small block-title" data-i18n="thesis.99">KNOWN GLITCHES (LIMITATIONS)</p>
             <ul>
-              <li data-i18n="thesis.100">Observational: it predicts who she married, not who she would have preferred.</li>
+              <li data-i18n="thesis.100">Observational data: the model sees who she married and can only infer what she preferred.</li>
               <li data-i18n="thesis.101">Only age, education and race. Personality, values and attraction aren't in the data.</li>
               <li data-i18n="thesis.102">Married, co-residing couples only, modelled from the woman's side.</li>
             </ul>
@@ -533,7 +520,7 @@
           </div>
         </div>
         <div class="victory reveal" id="victory">
-          <p class="pixel" data-i18n="thesis.113">★ BOSS DEFEATED ★</p>
+          <p class="pixel" data-i18n="thesis.113">BOSS DEFEATED</p>
           <p class="muted" data-i18n="thesis.114">Prediction and explanation work best together. Coefficients show the direction of a preference; ablation shows how much each one actually contributes.</p>
         </div>
       </div>
@@ -555,7 +542,7 @@
           </div>
           <h3 data-i18n="sidequests.6">If we look at conspiracy theories as a belief system, what would this mean for the climate change debate?</h3>
           <p class="muted" data-i18n="sidequests.7">Philosophy, Politics &amp; Society · Supervisor: Carmen Lea Dege</p>
-          <p class="mb-premise" data-i18n="sidequests.8"><strong>The problem:</strong> debunking and fact-checking keep failing against conspiracy theories, because the beliefs aren't really built on wrong facts. They're rooted in people's culture and worldview. So instead of asking <em>what's false</em>, the thesis asks <em>why people believe</em>.</p>
+          <p class="mb-premise" data-i18n="sidequests.8"><strong>The problem:</strong> debunking and fact-checking keep failing against conspiracy theories, because the beliefs are rooted in people's culture and worldview. The thesis therefore asks <em>why people believe</em>.</p>
           <div class="mb-phases">
             <div class="mb-phase">
               <span class="pixel small" data-i18n="sidequests.9">PHASE 1 · REDEFINE</span>
@@ -570,8 +557,8 @@
               <p data-i18n="sidequests.14">The hacked emails from the Climatic Research Unit and the media storm that followed damaged public trust in climate science, making the case for <strong>transparency and open discussion</strong> about research.</p>
             </div>
           </div>
-          <p class="mb-result" data-i18n="sidequests.15"><span class="pixel small yellow">RESULT ›</span> Don't isolate conspiracy believers; engage them. Treating their views as a belief system rather than "bad information" makes the climate debate more productive and more inclusive.</p>
-          <p class="mb-thread" data-i18n="sidequests.16">🧵 The thread to the MSc: one thesis asks why people believe what they do, the other predicts whom they choose.</p>
+          <p class="mb-result" data-i18n="sidequests.15"><span class="pixel small yellow">RESULT ›</span> Engage conspiracy believers in the conversation. Treating their views as a belief system makes the climate debate more productive and more inclusive.</p>
+          <p class="mb-thread" data-i18n="sidequests.16">The thread to the MSc: one thesis asks why people believe what they do, the other predicts whom they choose.</p>
         </article>
 
         <article class="side px reveal">
@@ -589,7 +576,6 @@
           <div class="chips"><span data-i18n="sidequests.27">Agent-Based Modelling</span><span data-i18n="thesis.104">R</span><span data-i18n="sidequests.28">Simulation</span></div>
         </article>
         <article class="side px locked reveal">
-          <div class="lock">🔒</div>
           <p class="pixel small" data-i18n="sidequests.29">NEW QUEST LOADING<span class="dots-anim"></span></p>
           <p class="muted" data-i18n="sidequests.30">Open to research collaborations and data roles.</p>
         </article>
@@ -609,7 +595,6 @@
       <div class="trophy-grid">
         <article class="trophy legendary px reveal">
           <div class="trophy-top">
-            <span class="trophy-icon" aria-hidden="true">🏅</span>
             <div>
               <span class="rarity pixel small" data-i18n="trophies.5">LEGENDARY</span>
               <h3 data-i18n="trophies.6">Interdisciplinary Honours Degree</h3>
@@ -626,7 +611,6 @@
 
         <article class="trophy epic px reveal">
           <div class="trophy-top">
-            <span class="trophy-icon" aria-hidden="true">🌱</span>
             <div>
               <span class="rarity pixel small" data-i18n="trophies.15">EPIC</span>
               <h3 data-i18n="trophies.16">Sustainability Certificate</h3>
@@ -639,7 +623,6 @@
 
         <article class="trophy rare px reveal">
           <div class="trophy-top">
-            <span class="trophy-icon" aria-hidden="true">🌏</span>
             <div>
               <span class="rarity pixel small" data-i18n="trophies.22">RARE</span>
               <h3 data-i18n="trophies.23">International Summer School</h3>
@@ -664,27 +647,27 @@
       <div class="inv px reveal">
         <p class="pixel small block-title" data-i18n="inventory.4">TECHNICAL &amp; DATA</p>
         <div class="slots">
-          <button class="slot" data-tip="R &amp; RStudio · Advanced. Everything in the thesis is R." data-i18n="inventory.6" data-i18n-attr="data-tip:inventory.5"><span>📈</span>R</button>
-          <button class="slot" data-tip="Random forests, logistic regression, conditional logit forests" data-i18n="inventory.8" data-i18n-attr="data-tip:inventory.7"><span>🌲</span>ML</button>
-          <button class="slot" data-tip="Conditional logit · McFadden-style discrete choice models" data-i18n="inventory.10" data-i18n-attr="data-tip:inventory.9"><span>🎯</span>Choice models</button>
-          <button class="slot" data-tip="Agent-based modelling of social systems" data-i18n="inventory.12" data-i18n-attr="data-tip:inventory.11"><span>🤖</span>ABM</button>
-          <button class="slot" data-tip="Large-scale data processing: millions of census records" data-i18n="inventory.14" data-i18n-attr="data-tip:inventory.13"><span>🗄️</span>Big data</button>
-          <button class="slot" data-tip="Quantitative analysis &amp; statistical inference" data-i18n="inventory.16" data-i18n-attr="data-tip:inventory.15"><span>🧮</span>Quant</button>
-          <button class="slot" data-tip="Data visualisation" data-i18n="inventory.18" data-i18n-attr="data-tip:inventory.17"><span>🎨</span>Dataviz</button>
-          <button class="slot" data-tip="Data cleansing, validation, exploratory analysis &amp; feature engineering" data-i18n="inventory.20" data-i18n-attr="data-tip:inventory.19"><span>🧹</span>Data prep</button>
-          <button class="slot" data-tip="Python" data-i18n="inventory.22" data-i18n-attr="data-tip:inventory.21"><span>🐍</span>Python</button>
-          <button class="slot" data-tip="Excel" data-i18n="inventory.24" data-i18n-attr="data-tip:inventory.23"><span>📗</span>Excel</button>
-          <button class="slot" data-tip="Quarto &amp; LaTeX for reproducible writing" data-i18n="inventory.26" data-i18n-attr="data-tip:inventory.25"><span>📜</span>Quarto</button>
+          <button class="slot" data-tip="R &amp; RStudio · Advanced. Everything in the thesis is R." data-i18n="inventory.6" data-i18n-attr="data-tip:inventory.5">R</button>
+          <button class="slot" data-tip="Random forests, logistic regression, conditional logit forests" data-i18n="inventory.8" data-i18n-attr="data-tip:inventory.7">ML</button>
+          <button class="slot" data-tip="Conditional logit · McFadden-style discrete choice models" data-i18n="inventory.10" data-i18n-attr="data-tip:inventory.9">Choice models</button>
+          <button class="slot" data-tip="Agent-based modelling of social systems" data-i18n="inventory.12" data-i18n-attr="data-tip:inventory.11">ABM</button>
+          <button class="slot" data-tip="Large-scale data processing: millions of census records" data-i18n="inventory.14" data-i18n-attr="data-tip:inventory.13">Big data</button>
+          <button class="slot" data-tip="Quantitative analysis &amp; statistical inference" data-i18n="inventory.16" data-i18n-attr="data-tip:inventory.15">Quant</button>
+          <button class="slot" data-tip="Data visualisation" data-i18n="inventory.18" data-i18n-attr="data-tip:inventory.17">Dataviz</button>
+          <button class="slot" data-tip="Data cleansing, validation, exploratory analysis &amp; feature engineering" data-i18n="inventory.20" data-i18n-attr="data-tip:inventory.19">Data prep</button>
+          <button class="slot" data-tip="Python" data-i18n="inventory.22" data-i18n-attr="data-tip:inventory.21">Python</button>
+          <button class="slot" data-tip="Excel" data-i18n="inventory.24" data-i18n-attr="data-tip:inventory.23">Excel</button>
+          <button class="slot" data-tip="Quarto &amp; LaTeX for reproducible writing" data-i18n="inventory.26" data-i18n-attr="data-tip:inventory.25">Quarto</button>
         </div>
         <p class="pixel small block-title" data-i18n="inventory.27">CORE COMPETENCIES</p>
         <div class="slots">
-          <button class="slot" data-tip="Strategic leadership: LinCSS President, leading the executive board" data-i18n="inventory.29" data-i18n-attr="data-tip:inventory.28"><span>👑</span>Leadership</button>
-          <button class="slot" data-tip="Budget management: statutory financial signatory for LinCSS" data-i18n="inventory.31" data-i18n-attr="data-tip:inventory.30"><span>💰</span>Budget</button>
-          <button class="slot" data-tip="Science communication: honours module on explaining science to non-technical audiences" data-i18n="inventory.33" data-i18n-attr="data-tip:inventory.32"><span>📣</span>SciComm</button>
-          <button class="slot" data-tip="AI &amp; ethics governance" data-i18n="inventory.35" data-i18n-attr="data-tip:inventory.34"><span>⚖️</span>AI ethics</button>
-          <button class="slot" data-tip="Sustainability strategy: 30 EC Sustainability Certificate" data-i18n="inventory.37" data-i18n-attr="data-tip:inventory.36"><span>🌱</span>Sustain.</button>
-          <button class="slot" data-tip="Cross-functional collaboration in international teams" data-i18n="inventory.39" data-i18n-attr="data-tip:inventory.38"><span>🤝</span>Teamwork</button>
-          <button class="slot" data-tip="Event organisation: Open Days at Radboud, LinCSS events" data-i18n="inventory.41" data-i18n-attr="data-tip:inventory.40"><span>🎪</span>Events</button>
+          <button class="slot" data-tip="Strategic leadership: LinCSS President, leading the executive board" data-i18n="inventory.29" data-i18n-attr="data-tip:inventory.28">Leadership</button>
+          <button class="slot" data-tip="Budget management: statutory financial signatory for LinCSS" data-i18n="inventory.31" data-i18n-attr="data-tip:inventory.30">Budget</button>
+          <button class="slot" data-tip="Science communication: honours module on explaining science to non-technical audiences" data-i18n="inventory.33" data-i18n-attr="data-tip:inventory.32">SciComm</button>
+          <button class="slot" data-tip="AI &amp; ethics governance" data-i18n="inventory.35" data-i18n-attr="data-tip:inventory.34">AI ethics</button>
+          <button class="slot" data-tip="Sustainability strategy: 30 EC Sustainability Certificate" data-i18n="inventory.37" data-i18n-attr="data-tip:inventory.36">Sustain.</button>
+          <button class="slot" data-tip="Cross-functional collaboration in international teams" data-i18n="inventory.39" data-i18n-attr="data-tip:inventory.38">Teamwork</button>
+          <button class="slot" data-tip="Event organisation: Open Days at Radboud, LinCSS events" data-i18n="inventory.41" data-i18n-attr="data-tip:inventory.40">Events</button>
         </div>
         <p class="inv-tip" id="inv-tip" aria-live="polite">&nbsp;</p>
       </div>
@@ -700,11 +683,11 @@
         <img src="avatar.jpg" alt="Aleksandra Bocheva" width="360" height="360" loading="lazy"  data-i18n-attr="alt:head.1"/>
         <div class="dialog-box px">
           <span class="pixel small yellow" data-i18n="contact.4">ALEKSANDRA</span>
-          <p data-i18n="contact.5">Hi! I'm open to research collaborations, data roles and good conversations. Say hello ▼</p>
+          <p data-i18n="contact.5">Hi! I'm open to research collaborations, data roles and good conversations. Say hello.</p>
         </div>
       </div>
       <div class="hero-links center">
-        <a href="mailto:alexandrabocheva1@gmail.com" class="btn btn-pink" data-i18n="contact.6">✉ INSERT COIN</a>
+        <a href="mailto:alexandrabocheva1@gmail.com" class="btn btn-pink" data-i18n="contact.6">INSERT COIN</a>
         <a href="https://linkedin.com/in/aleksandra-bocheva-a667a1252" class="btn btn-ghost" target="_blank" rel="noopener" data-i18n="contact.7">LinkedIn</a>
       </div>
       <p class="muted small-text" data-i18n="contact.8">alexandrabocheva1@gmail.com · Norrköping, Sweden</p>
@@ -712,6 +695,16 @@
   </section>
 
   <footer>
+    <div class="legal">
+      <section id="privacy" aria-labelledby="privacy-h">
+        <h2 class="pixel small" id="privacy-h" data-i18n="foot.ph">PRIVACY</h2>
+        <p data-i18n="foot.privacy">This site sets no cookies, runs no analytics and loads nothing from other servers: fonts and scripts are hosted here. If you pick a language, that choice is saved in your browser's local storage and stays on your device. The site is hosted on GitHub Pages, which may log visitor IP addresses for security; see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub's privacy statement</a>. Emails you send me are used only to reply to you.</p>
+      </section>
+      <section id="terms" aria-labelledby="terms-h">
+        <h2 class="pixel small" id="terms-h" data-i18n="foot.th">TERMS</h2>
+        <p data-i18n="foot.terms">All text and images © 2026 Aleksandra Bocheva. You may quote or link to this page with attribution. The thesis summaries here are simplified for a general audience; please cite the theses themselves for exact results.</p>
+      </section>
+    </div>
     <p data-i18n="foot.1">© 2026 Aleksandra Bocheva · <span class="muted">psst… ↑ ↑ ↓ ↓ ← → ← → B A</span></p>
   </footer>
 

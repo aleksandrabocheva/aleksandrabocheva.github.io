@@ -47,8 +47,8 @@
     sameRace: 'Same race/ethnicity:',
     yes: 'yes',
     no: 'no',
-    win: '✓ Same pick as the model. It gives Candidate {name} a {p} chance.',
-    lose: '✗ The model prefers Candidate {name} ({p}). The deciding factor was {factor}.',
+    win: 'Same pick as the model. It gives Candidate {name} a {p} chance.',
+    lose: 'The model prefers Candidate {name} ({p}). The deciding factor was {factor}.',
     factor: { same: 'sharing her race/ethnicity', older: 'being older than her', gap: 'a smaller age gap', edu: 'a closer education level', hyper: 'his education level', hypo: 'his education level' },
     abl: {
       AER: "Full power: the real husband sits in the top 15% of his city's men.",
@@ -64,7 +64,7 @@
     diff: { easy: 'EASY', normal: 'NORMAL', hard: 'HARD', expert: 'EXPERT' },
     worldRank: 'spline metro rank · {n} men',
     winner: 'Winner: {w}',
-    splineWin: '👑 Spline clogit',
+    splineWin: 'Spline clogit',
     forestFull: 'Forest (full), {p}',
     countdownDone: 'YES',
   };
@@ -168,18 +168,8 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !langMenu.hidden) { setMenu(false); langBtn.focus(); } });
 
   /* ───────── Achievements ───────── */
-  const ACH = [
-    { id: 'start',     icon: '▶️' },
-    { id: 'character', icon: '🧙' },
-    { id: 'quests',    icon: '📜' },
-    { id: 'boss',      icon: '💘' },
-    { id: 'game',      icon: '🎯' },
-    { id: 'power',     icon: '⚡' },
-    { id: 'victory',   icon: '🏆' },
-    { id: 'trophies',  icon: '🏅' },
-    { id: 'contact',   icon: '🪙' },
-    { id: 'konami',    icon: '🕹️', secret: true },
-  ];
+  const ACH = ['start', 'character', 'quests', 'boss', 'game', 'power', 'victory', 'trophies', 'contact', 'konami']
+    .map(id => ({ id, secret: id === 'konami' }));
   const got = new Set();
   const achCount = $('#ach-count');
   const achList = $('#ach-list');
@@ -189,13 +179,13 @@
 
   function renderAch() {
     achList.innerHTML = '';
-    ACH.forEach(a => {
+    ACH.forEach((a, i) => {
       const li = document.createElement('li');
       const has = got.has(a.id);
       if (has) li.className = 'got';
       const hidden = a.secret && !has;
       const [name, desc] = sub('ach', a.id);
-      li.innerHTML = `<span class="ai">${hidden ? '❔' : a.icon}</span><span><strong>${hidden ? '???' : name}</strong><br>${hidden ? t('achSecret') : desc}</span>`;
+      li.innerHTML = `<span class="ai">${String(i + 1).padStart(2, '0')}</span><span><strong>${hidden ? '???' : name}</strong><br>${hidden ? t('achSecret') : desc}</span>`;
       achList.appendChild(li);
     });
     achCount.textContent = got.size;
@@ -211,7 +201,7 @@
     trophyBtn.classList.remove('bump'); void trophyBtn.offsetWidth; trophyBtn.classList.add('bump');
     const el = document.createElement('div');
     el.className = 'toast';
-    el.innerHTML = `<span class="ti">${a.icon}</span><div><b>${t('achUnlocked')}</b><span>${sub('ach', id)[0]}</span></div>`;
+    el.innerHTML = `<div><b>${t('achUnlocked')}</b><span>${sub('ach', id)[0]}</span></div>`;
     $('#toasts').appendChild(el);
     setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 2800);
   }
@@ -222,46 +212,6 @@
   renderAch();
 
   $('#press-start').addEventListener('click', () => unlock('start'));
-
-  /* ───────── Starfield ───────── */
-  const canvas = $('#stars');
-  const ctx = canvas.getContext('2d');
-  let stars = [], W = 0, H = 0, DPR = 1;
-  const COLORS = ['#ffffff', '#c9b3ff', '#4fe3d1', '#ff6fb5', '#ffd166'];
-
-  function makeStars() {
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
-    canvas.width = W * DPR; canvas.height = H * DPR;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    const n = Math.round((W * H) / 7000);
-    stars = Array.from({ length: n }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      s: Math.random() < 0.85 ? 2 : 3,
-      d: 0.05 + Math.random() * 0.35,           // parallax depth
-      c: COLORS[Math.random() < 0.7 ? 0 : 1 + Math.floor(Math.random() * 4)],
-      t: Math.random() * Math.PI * 2,
-      sp: 0.5 + Math.random() * 1.5,
-    }));
-  }
-  function drawStars(time = 0) {
-    ctx.clearRect(0, 0, W, H);
-    const sy = window.scrollY;
-    for (const st of stars) {
-      const y = ((st.y - sy * st.d) % H + H) % H;
-      const a = reduceMotion ? 0.7 : 0.35 + 0.65 * Math.abs(Math.sin(st.t + time * 0.001 * st.sp));
-      ctx.globalAlpha = a;
-      ctx.fillStyle = st.c;
-      ctx.fillRect(Math.round(st.x), Math.round(y), st.s, st.s);
-    }
-    ctx.globalAlpha = 1;
-  }
-  function loop(time) { drawStars(time); requestAnimationFrame(loop); }
-  makeStars();
-  window.addEventListener('resize', makeStars);
-  if (reduceMotion) { drawStars(); window.addEventListener('scroll', () => drawStars(), { passive: true }); }
-  else requestAnimationFrame(loop);
 
   /* ───────── Typewriter ───────── */
   const tw = $('#typewriter');
@@ -382,15 +332,15 @@
      hypergamy (man more educated) −0.21 · hypogamy (man less educated) 0.07 */
   const B = { same: 1.65, older: 0.77, gap: -0.22, edu: -0.57, hyper: -0.21, hypo: 0.07 };
   const NAMES = ['A', 'B', 'C', 'D', 'E', 'F'];
-  const HAIR = ['#ffd166', '#ff6fb5', '#4fe3d1', '#a77bff', '#ff9f43', '#7ee787', '#5b8cff'];
-  const SHIRT = ['#3b2f6b', '#24998c', '#b23f7c', '#5b3fa8', '#2f6fb2', '#a35b1f'];
+  const HAIR = ['#1c1a16', '#5f5a4f', '#8b3a2a', '#a8865a'];
+  const SHIRT = ['#1c1a16', '#b5321c', '#5f5a4f'];
   const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
   function sprite(hair, shirt) {
     const rows = ['..HHHH..', '.HHHHHH.', '.HFFFFH.', '.FEFFEF.', '.FFFFFF.', '..FFFF..', '.SSSSSS.', 'SSSSSSSS'];
-    const col = { H: hair, F: '#e9dcff', E: '#100b20', S: shirt };
+    const col = { H: hair, F: '#dccfb4', E: '#1c1a16', S: shirt };
     let r = '';
     rows.forEach((row, y) => [...row].forEach((ch, x) => { if (col[ch]) r += `<rect x="${x}" y="${y}" width="1" height="1" fill="${col[ch]}"/>`; }));
     return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
@@ -540,26 +490,25 @@
   const worlds = $('#worlds');
   let period = 0;
   function diff(r) {
-    if (r < 12) return ['easy', '★☆☆☆', 'easy'];
-    if (r < 13.5) return ['normal', '★★☆☆', ''];
-    if (r < 15) return ['hard', '★★★☆', ''];
-    return ['expert', '★★★★', 'hard'];
+    if (r < 12) return ['easy', 'easy'];
+    if (r < 13.5) return ['normal', ''];
+    if (r < 15) return ['hard', ''];
+    return ['expert', 'hard'];
   }
   function renderWorlds() {
     const p = period;
     worlds.innerHTML = '';
     CITIES.forEach(c => {
       const r = c.r[p];
-      const [label, starsTxt, cls] = diff(r);
+      const [label, cls] = diff(r);
       const f = c.forest[p];
       const el = document.createElement('div');
-      el.className = 'world px ' + cls;
+      el.className = 'world ' + cls;
       el.innerHTML = `<h4>${sub('cities', c.id)}</h4>
-        <p class="diff">${starsTxt}<em>${sub('diff', label)}</em></p>
-        <div class="wr">${pct(r, 1)}</div>
-        <p class="wl">${t('worldRank', { n: num(c.n[p]) })}</p>
+        <p class="diff pixel">${sub('diff', label)}</p>
         <div class="wbar"><i style="width:${(r / 20 * 100).toFixed(1)}%"></i></div>
-        <p class="wl">${t('winner', { w: f === null ? t('splineWin') : t('forestFull', { p: pct(f, 2) }) })}</p>`;
+        <div class="wr pixel">${pct(r, 1)}</div>
+        <p class="wl">${t('worldRank', { n: num(c.n[p]) })}<br>${t('winner', { w: f === null ? t('splineWin') : t('forestFull', { p: pct(f, 2) }) })}</p>`;
       worlds.appendChild(el);
     });
   }
@@ -607,7 +556,7 @@
     if (ki === code.length) { ki = 0; heartRain(); unlock('konami'); }
   });
   function heartRain() {
-    const glyphs = ['💘', '💜', '💖', '✨', '🩷', '💙'];
+    const glyphs = ['💘', '💖', '🩷', '❤️'];
     for (let i = 0; i < 40; i++) {
       const h = document.createElement('span');
       h.className = 'rain';
